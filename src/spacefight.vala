@@ -184,10 +184,10 @@ namespace SpaceFight{
 			bool check = true;
 			var text = new Sprite("img/instrucciones.bmp");
 			if(text.img== null){ // En caso de no cargarse la imagen, advertimos al usuario
-				stdout.printf(stderr, "No se ha podido cargar la imagen: %s\n", SDL.GetError());
+				GLib.error("No se ha podido cargar la imagen: %s\n", SDL.get_error());
 				SDL.quit();
 			}
-			text.draw(null, screen);
+			text.draw(screen);
 			screen.flip();
 			while (check){
 				SDL.Event event1;

@@ -176,7 +176,28 @@ namespace SpaceFight{
 
 		public void end(){
 		//FIXME Stub
-
+		bool check = true;
+			var text = new Sprite("img/perdiste.bmp");
+			if(text.img== null){ // En caso de no cargarse la imagen, advertimos al usuario
+				GLib.error("No se ha podido cargar la imagen: %s\n", SDL.get_error());
+				SDL.quit();
+			}
+			text.draw(screen);
+			screen.flip();
+			while (check){
+				SDL.Event event1;
+				while (event1.poll() == 1) {
+					screen.flip();
+					switch (event1.type) {
+						case EventType.QUIT:
+							check = false;
+							break;
+						case EventType.KEYDOWN:
+							check = false;
+							break;	
+					}
+				}
+			}
 		}
 	}	  
 }
