@@ -175,7 +175,7 @@ namespace SpaceFight{
 		}
 
 		public void end(){
-
+		//FIXME Stub
 
 		}
 	}	  

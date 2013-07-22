@@ -21,7 +21,7 @@ VALAFLAGS =  --pkg SDL_gfx  \
 bin_PROGRAMS = spacefight
 
 spacefight_SOURCES = \
-	spacefight.vala config.vapi sprite.vala game.vala enemy.vala ship.vala shot.vala actor.vala
+	spacefight.vala config.vapi sprite.vala game.vala shot.vala actor.vala
 
 spacefight_LDFLAGS = \
 	-Wl,--export-dynamic

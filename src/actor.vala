@@ -22,7 +22,8 @@ using GLib;
 namespace SpaceFight{
 
 	public class Actor : Sprite{
-		public Actor (string path, bool type, int x= 0, int y=0){
+		public bool type;
+		public Actor (string path, bool type = false, int x= 0, int y=0){
 			base(path, x, y);
 		}
 
