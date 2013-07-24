@@ -175,7 +175,7 @@ namespace SpaceFight{
 		}
 
 		public void end(){
-		//FIXME Stub
+		//FIXME Not complete
 		bool check = true;
 			var text = new Sprite("img/perdiste.bmp");
 			if(text.img== null){ // En caso de no cargarse la imagen, advertimos al usuario
