@@ -18,8 +18,6 @@
 
 using GLib;
 using SDL;
-using Frame;
-using Sprite;
 using SDLMixer;
 namespace SpaceFight{
 	public class SpaceFight : Object {
