@@ -28,7 +28,7 @@ namespace SpaceFight{
 		private Sprite  boton3;
 		private Music background_music;
 		private Surface icon;
-		private unowned SDL.Screen screen;
+		private weak SDL.Screen screen;
 		private const uint8 SCREEN_WIDTH = 800;
 		private const uint8 SCREEN_HEIGHT = 600;
 		private const uint8 SCREEN_BPP = 24;
@@ -159,6 +159,7 @@ namespace SpaceFight{
 
 		}
 		private void init_video() {	
+			screen = SDL.Screen.instance();
 			screen.set_video_mode (SCREEN_WIDTH, SCREEN_HEIGHT,
 			                       SCREEN_BPP, EVERYTHING);
 			if (this.screen == null) {
