@@ -33,10 +33,10 @@ namespace SpaceFight{
 
 
 	public class Sprite : Object {
-		private uint8 state;
+		private uint8 state;//The actual frame
 		private uint8 cont;
-		private uint8 nframes;
-		private Frame[]? sprite;
+		private uint8 nframes;//Number of frames
+		private Frame[] sprite;
 		private bool active {get;set;}
 		private SDL.Rect place{get;set;}
 
@@ -48,13 +48,13 @@ namespace SpaceFight{
 			cont = 0;
 			state = 1;
 			active = true;
-			place.x = 0;
+			place.x = x;
 			place.y = y;
 			place.w = sprite[0].img.w;
 			place.h = sprite[0].img.h;
 		}
 		public Sprite.from_empty(int nc = 1){
-			sprite = new Frame[nc];
+			sprite = Frame[nc];
 			nframes = nc;
 			cont = 0;
 			state = 1;
@@ -64,11 +64,19 @@ namespace SpaceFight{
 			place.x = 0;
 			place.y = 0;
 		}
-		//Destructor
-		~Sprite(){
-			for(int i = 0; i < nframes; i++){
-				sprite[i].unload();
-			}	
+		public Sprite.from_pathlist(string[] pathlist){
+			sprite = Frame[pathlist.length];
+			nframes = pathlist.length;
+			active= true;
+			cont = 0;
+			state = 1;
+			for (int i = 0; i < pathlist.length; i++) {
+				sprite[i].load(pathlist[i]);
+				place.x = 0;
+				place.y = 0;
+				place.w = sprite[0].img.w;
+				place.h = sprite[0].img.h;
+			}
 		}
 
 		/* Method definitions */
@@ -123,8 +131,19 @@ namespace SpaceFight{
 		}
 		public void draw (SDL.Rect srcrect = null, SDL.Surface dst) {
 			sprite[state].img.blit(srcrect, dst, place);
+			
 		}
-
+		public void animate(SDL.Rect srcrect = null, SDL.Surface dst){
+			this.draw(srcrect, dst);
+			if(nframes > 1){
+				if (state == nframes){
+					select_frame(1);
+				}else{
+					select_frame(state+1);
+				}
+				
+			}
+		}
 		public Frame actual_frame(){
 			return sprite[state];
 		}
