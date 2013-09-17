@@ -19,6 +19,7 @@
 
 using GLib;
 using SDL;
+using SDLGraphics;
 namespace SpaceFight{
 	public class Game : GLib.Object {
 		private const uint8 SCREEN_WIDTH = 800;

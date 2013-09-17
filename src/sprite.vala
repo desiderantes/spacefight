@@ -16,6 +16,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 using SDL;
+using SDLGraphics;
 using GLib;
 namespace SpaceFight{
 	public struct Frame{
@@ -33,6 +34,7 @@ namespace SpaceFight{
 
 
 	public class Sprite : Object {
+
 		private uint8 state;//The actual frame
 		private uint8 cont;
 		private uint8 nframes;//Number of frames

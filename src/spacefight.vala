@@ -18,9 +18,10 @@
 
 using GLib;
 using SDL;
+using SDLGraphics;
 using SDLMixer;
 namespace SpaceFight{
-	public class SpaceFight : Object {
+	public class SpaceFight : Application {
 		private Sprite  boton1;
 		private Sprite  boton2;
 		private Sprite  boton3;
@@ -33,15 +34,23 @@ namespace SpaceFight{
 		private const uint8 DELAY = 10;
 		private uint8 ex=SCREEN_WIDTH / 40;
 
+
+		public SpaceFight(){
+			init_video ();
+			init_music ();
+		}
+		
 		public static int main (string[] args) 
 		{
 			SDL.init(InitFlag.EVERYTHING);
-			init_video ();
-			init_music ();
-			menu();
+			var app = new SpaceFight();
+			app.run();
 			SDL.quit ();
 
 			return 0;
+		}
+		private void run(){
+			menu();
 		}
 		private void menu(){
 			uint8 ex=SCREEN_WIDTH / 40;

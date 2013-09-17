@@ -19,7 +19,11 @@ dnl Check for vala
 AM_PROG_VALAC([0.10.0])
 
 
-PKG_CHECK_MODULES(SPACEFIGHT, [gtk+-3.0 sdl])
+PKG_CHECK_MODULES(SPACEFIGHT, SDL_gfx
+SDL2_mixer
+sdl2
+SDL2_image
+[gtk+-3.0])
 
 
 AC_OUTPUT([
