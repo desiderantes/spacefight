@@ -20,7 +20,7 @@ using GLib;
 namespace SpaceFight{
 	public class Shot: Sprite{
 		private override int8 movement {get;set;}
-		public Shot(uint8 x, uint8 y, bool move){
+		public Shot(uint16 x, uint16 y, bool move){
 			if(move) {
 				movement = -1;
 			}else{ 

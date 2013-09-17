@@ -22,12 +22,12 @@ using SDL;
 using SDLGraphics;
 namespace SpaceFight{
 	public class Game : GLib.Object {
-		private const uint8 SCREEN_WIDTH = 800;
-		private const uint8 SCREEN_HEIGHT = 600;
-		private const uint8 SCREEN_BPP = 24;
+		private const uint16 SCREEN_WIDTH = 800;
+		private const uint16 SCREEN_HEIGHT = 600;
+		private const uint16 SCREEN_BPP = 24;
 		private const uint8 DELAY = 10;
-		private uint8 ex=SCREEN_WIDTH / 40;
-		private uint8 ey= SCREEN_HEIGHT / 12;
+		private uint16 ex=SCREEN_WIDTH / 40;
+		private uint16 ey= SCREEN_HEIGHT / 12;
 
 		private unowned SDL.Screen screen;
 		private bool done;
@@ -47,9 +47,9 @@ namespace SpaceFight{
 		private uint8 limit;
 		private uint8 shots_left;
 
-		public Game (uint8 level, SDL.Screen screen, uint8 SCREEN_WIDTH, uint8 SCREEN_HEIGHT){
-			uint8 ex = SCREEN_WIDTH / 50 as uint8;
-			uint8 ey = SCREEN_HEIGHT / (40 / 3) as uint8; 
+		public Game (uint8 level, SDL.Screen screen, uint16 SCREEN_WIDTH, uint16 SCREEN_HEIGHT){
+			uint16 ex = SCREEN_WIDTH / 50 as uint16;
+			uint16 ey = SCREEN_HEIGHT / (40 / 3) as uint16; 
 			limit = (level*level*20)-(level/2)+(level*level) as uint8;
 			this.screen = screen;
 			shots_left = limit + 8;
@@ -58,7 +58,7 @@ namespace SpaceFight{
 			done = false;
 		}
 
-		public void load_sprites(uint8 ex, uint8 ey){
+		public void load_sprites(uint16 ex, uint16 ey){
 			enemies = new GLib.List <Actor> ();
 			for (uint8 i = 0; i < limit; i++){
 				if (ex > SCREEN_WIDTH - (SCREEN_WIDTH / 40)){
@@ -78,7 +78,7 @@ namespace SpaceFight{
 
 				en1.actual_frame().img.set_colorkey(SDL_SRCCOLORKEY | SDL_RLEACCEL,SDL.PixelFormat.map_rgb(90,53,53));
 				enemies.append(en1);
-				ex += SCREEN_WIDTH /(100/7) as uint8;
+				ex += SCREEN_WIDTH /(100/7) as uint16;
 			}
 			background= new Sprite ("img/background1.bmp");
 			if(background.actual_frame().img = null){

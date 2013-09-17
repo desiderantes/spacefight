@@ -28,11 +28,11 @@ namespace SpaceFight{
 		private Music background_music;
 		private Surface icon;
 		private weak SDL.Screen screen;
-		private const uint8 SCREEN_WIDTH = 800;
-		private const uint8 SCREEN_HEIGHT = 600;
-		private const uint8 SCREEN_BPP = 24;
+		private const uint16 SCREEN_WIDTH = 800;
+		private const uint16 SCREEN_HEIGHT = 600;
+		private const uint16 SCREEN_BPP = 24;
 		private const uint8 DELAY = 10;
-		private uint8 ex=SCREEN_WIDTH / 40;
+		private uint16 ex=SCREEN_WIDTH / 40;
 
 
 		public SpaceFight(){
@@ -53,8 +53,8 @@ namespace SpaceFight{
 			menu();
 		}
 		private void menu(){
-			uint8 ex=SCREEN_WIDTH / 40;
-			uint8 ey =(SCREEN_HEIGHT/10) * 6 as uint8;
+			uint16 ex=SCREEN_WIDTH / 40;
+			uint16 ey =(SCREEN_HEIGHT/10) * 6 as uint16;
 			bool good = true;
 			var splash = new Sprite("img/splash.bmp");
 			var seleccion = new Sprite("img/selector.bmp");
