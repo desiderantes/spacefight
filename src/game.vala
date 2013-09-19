@@ -29,7 +29,7 @@ namespace SpaceFight{
 		private uint16 ex=SCREEN_WIDTH / 40;
 		private uint16 ey= SCREEN_HEIGHT / 12;
 
-		private unowned SDL.Screen screen;
+		private unowned SDL.Window screen;
 		private bool done;
 		private Actor ship;
 		private Sprite background;
@@ -47,7 +47,7 @@ namespace SpaceFight{
 		private uint8 limit;
 		private uint8 shots_left;
 
-		public Game (uint8 level, SDL.Screen screen, uint16 SCREEN_WIDTH, uint16 SCREEN_HEIGHT){
+		public Game (uint8 level, SDL.Window screen, uint16 SCREEN_WIDTH, uint16 SCREEN_HEIGHT){
 			uint16 ex = SCREEN_WIDTH / 50 as uint16;
 			uint16 ey = SCREEN_HEIGHT / (40 / 3) as uint16; 
 			limit = (level*level*20)-(level/2)+(level*level) as uint8;

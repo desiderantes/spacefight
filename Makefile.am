@@ -19,3 +19,12 @@ EXTRA_DIST = $(spacefightdoc_DATA)
 # Remove doc directory on uninstall
 uninstall-local:
 	-rm -r $(spacefightdocdir)
+
+
+AM_VALAFLAGS = --pkg \
+	sdl \
+	--pkg \
+	sdl-gfx \
+	-X \
+	-lSDL_gfx \
+	--Xcc=-I/usr/include/SDL 

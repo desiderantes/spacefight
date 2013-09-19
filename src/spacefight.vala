@@ -26,8 +26,9 @@ namespace SpaceFight{
 		private Sprite  boton2;
 		private Sprite  boton3;
 		private Music background_music;
-		private Surface icon;
-		private weak SDL.Screen screen;
+		private SDL.Surface icon;
+		private SDL.Window window;
+		private SDL.Renderer render;
 		private const uint16 SCREEN_WIDTH = 800;
 		private const uint16 SCREEN_HEIGHT = 600;
 		private const uint16 SCREEN_BPP = 24;
@@ -64,7 +65,7 @@ namespace SpaceFight{
 				SDL.quit();
 			}
 
-			splash.draw(screen);
+			splash.draw(window);
 			for (i = 0; i < 5; i++){
 				botones[i] = new Sprite("img/boton"+(i+1).to_string()+".bmp");
 				botones[i].place.x=SCREEN_WIDTH/2;
@@ -75,20 +76,20 @@ namespace SpaceFight{
 					return EXIT_FAILURE;
 				}
 				botones[i].actual_frame().img.set_colorkey(SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL.PixelFormat.map_rbga(255, 255, 255,255));
-				botones[i].draw(screen);
+				botones[i].draw(window);
 			}
 			seleccion.place.x= botones[0].place.x;
 			seleccion.place.y= botones[0].place.y;
 			seleccion.place.h= botones[0].place.h;
 			seleccion.place.w= botones[0].place.w;
 			seleccion.actual_frame().set_alpha(SDL_SRCALPHA|SDL_RLEACCEL,150);
-			seleccion.draw(screen);
+			seleccion.draw(window);
 			const string posnam = "posicion";
 			seleccion.set_data<uint8>(posnam, 0);
 			while (good){
 				SDL.Event event;
 				while (event.poll() == 1) {
-					screen.flip();
+					window.flip();
 					switch (event.type) {
 						case EventType.QUIT:
 							good = false;
@@ -107,7 +108,7 @@ namespace SpaceFight{
 								}else{
 									seleccion.set_data(posnam,seleccion.get_data(posnam) -1);
 									seleccion.place.y -=40;
-									screen.flip();
+									window.flip();
 								}
 								break;
 							case SDL.KeySymbol.DOWN:
@@ -116,36 +117,36 @@ namespace SpaceFight{
 								}else{
 									seleccion.set_data(posnam,seleccion.get_data(posnam) +1);
 									seleccion.place.y +=40;
-									screen.flip();
+									window.flip();
 								}
 								break;
 							case SDL.KeySymbol.RETURN:
 								switch (seleccion.get_data(posnam)){
 									case 0:
 										level = 1;
-										var game = new Game(1, screen);
+										var game = new Game(1, window);
 										game.run();
-										splash.draw(screen);
-										screen.flip();
+										splash.draw(window);
+										window.flip();
 										break;
 									case 1:
 										level = 2;
-										var game = new Game(2, screen);
+										var game = new Game(2, window);
 										game.run();
-										splash.draw(screen);
-										screen.flip();
+										splash.draw(window);
+										window.flip();
 										break;
 									case 2:
 										level = 3;
-										var game = new Game(3, screen);
+										var game = new Game(3, window);
 										game.run();
-										splash.draw(screen);
-										screen.flip();
+										splash.draw(window);
+										window.flip();
 										break;
 									case 3:
 										instruccion();
-										splash.draw(screen);
-										screen.flip();
+										splash.draw(window);
+										window.flip();
 										break;
 									case 4:
 										good = false;
@@ -166,15 +167,13 @@ namespace SpaceFight{
 
 		}
 		private void init_video() {	
-			screen = SDL.Screen.instance();
-			screen.set_video_mode (SCREEN_WIDTH, SCREEN_HEIGHT,
-			                       SCREEN_BPP, EVERYTHING);
-			if (this.screen == null) {
-				GLib.error("Imposible Iniciar; (¿Seguro que existe la biblioteca de SDL?)");
+			window = new Window("Space Fight", SDL.Window.POS_CENTERED, SDL.Window.POS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, EVERYTHING)
+			if (this.window == null) {
+				GLib.error("Failed to star: Are you sure there is a SDL2 lib on your system?");
 			}
+			render = new Renderer.from_window(window, 
 			icono.load(new RWops("img/icono.bmp", rb), 0);
-			SDL.WindowManager.set_caption ("Space Fight", "");
-			SDL.WindowManager.set_icon(icono, null);
+			window.set_icon(icono);
 			SDL.GL.set_attribute(SDL.GLattr.DOUBLEBUFFER, 1);
 		}
 
@@ -195,8 +194,8 @@ namespace SpaceFight{
 				GLib.error("No se ha podido cargar la imagen: %s\n", SDL.get_error());
 				SDL.quit();
 			}
-			text.draw(screen);
-			screen.flip();
+			text.draw(render);
+			render.present();
 			while (check){
 				SDL.Event event1;
 				while (event1.poll() == 1) {

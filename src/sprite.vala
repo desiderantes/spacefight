@@ -21,11 +21,13 @@ using GLib;
 namespace SpaceFight{
 	public struct Frame{
 
-		private unowned SDL.Surface img{get;set;}
+		private unowned SDL.Texture img{get;set;}
 
-		public void load (string path) {
-			img.load(new RWops(path, rb), 0);
-			img.set_colorkey(SDL_SRCCOLORKEY|SDL_RLEACCEL, 1 );
+		public void load (string path, SDL.Renderer renderer) {
+			SDl.Surface surf = SDL.Surface.load(new RWops(path, rb), 0);
+			surf.set_colorkey(SDL_SRCCOLORKEY|SDL_RLEACCEL, 1 );
+			img = new Texture.from_surface(SDL.Renderer renderer, SDL.Surface surf);
+			surf.unref();
 		}
 		public void unload () {
 			img.unref();
@@ -131,12 +133,12 @@ namespace SpaceFight{
 		public int frames () {
 			return cont;
 		}
-		public void draw (SDL.Rect srcrect = null, SDL.Surface dst) {
-			sprite[state].img.blit(srcrect, dst, place);
+		public void draw (ref SDL.Render renderer, SDL.Rect srcrect = null) {
+			renderer.copy(sprite[state].img, srcrect, place);
 			
 		}
-		public void animate(SDL.Rect srcrect = null, SDL.Surface dst){
-			this.draw(srcrect, dst);
+		public void animate(ref SDL.Render renderer, SDL.Rect srcrect = null){
+			
 			if(nframes > 1){
 				if (state == nframes){
 					select_frame(1);
@@ -145,6 +147,7 @@ namespace SpaceFight{
 				}
 				
 			}
+			this.draw(renderer, srcrect);
 		}
 		public Frame actual_frame(){
 			return sprite[state];
