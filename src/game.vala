@@ -29,7 +29,7 @@ namespace SpaceFight{
 		private uint16 ex=SCREEN_WIDTH / 40;
 		private uint16 ey= SCREEN_HEIGHT / 12;
 
-		private unowned SDL.Window screen;
+		private unowned SDL.Renderer render;
 		private bool done;
 		private Actor ship;
 		private Sprite background;
@@ -47,11 +47,11 @@ namespace SpaceFight{
 		private uint8 limit;
 		private uint8 shots_left;
 
-		public Game (uint8 level, SDL.Window screen, uint16 SCREEN_WIDTH, uint16 SCREEN_HEIGHT){
+		public Game (uint8 level, SDL.Renderer render, uint16 SCREEN_WIDTH, uint16 SCREEN_HEIGHT){
 			uint16 ex = SCREEN_WIDTH / 50 as uint16;
 			uint16 ey = SCREEN_HEIGHT / (40 / 3) as uint16; 
 			limit = (level*level*20)-(level/2)+(level*level) as uint8;
-			this.screen = screen;
+			this.render = render;
 			shots_left = limit + 8;
 			dead = 0;
 			load_sprites(ex, ey);
@@ -95,12 +95,12 @@ namespace SpaceFight{
 		}
 		public void run (){
 			while (!done){
-				background.draw(screen);
-				ship.draw(screen);
+				background.draw(render);
+				ship.draw(render);
 				for (uint8 i = 0; i < limit; i++){
 					en2 = enemies.nth_data(i);
 					if(en2.active){
-						en2.draw(screen);
+						en2.draw(render);
 						if(en2.place.x > (SCREEN_WIDTH - en2.place.w)){
 							en2.place.x = en2.place.w;
 							en2.place.y += en2.place.h;
@@ -112,7 +112,7 @@ namespace SpaceFight{
 				}
 				for (uint8 i = 0; i < ship_shots.length(); i++){
 					tiro = ship_shots.nth_data(i);
-					tiro.draw(screen);
+					tiro.draw(render);
 					tiro.place.x += tiro.movement * 5 ;
 					if(tiro.place.y <= 0 ){
 						ship_shots.remove(tiro);
@@ -128,7 +128,7 @@ namespace SpaceFight{
 		public void process_events(){
 			SDL.Event event;
 			while (event.poll() == 1) {
-				screen.flip();
+				render.present();
 				switch (event.type) {
 					case EventType.QUIT:
 						done = true;
@@ -183,12 +183,12 @@ namespace SpaceFight{
 				GLib.error("No se ha podido cargar la imagen: %s\n", SDL.get_error());
 				SDL.quit();
 			}
-			text.draw(screen);
-			screen.flip();
+			text.draw(render);
+			render.present();
 			while (check){
 				SDL.Event event1;
 				while (event1.poll() == 1) {
-					screen.flip();
+					render.present();
 					switch (event1.type) {
 						case EventType.QUIT:
 							check = false;

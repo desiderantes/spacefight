@@ -89,7 +89,7 @@ namespace SpaceFight{
 			while (good){
 				SDL.Event event;
 				while (event.poll() == 1) {
-					window.flip();
+					render.present();
 					switch (event.type) {
 						case EventType.QUIT:
 							good = false;
@@ -108,7 +108,7 @@ namespace SpaceFight{
 								}else{
 									seleccion.set_data(posnam,seleccion.get_data(posnam) -1);
 									seleccion.place.y -=40;
-									window.flip();
+									render.present();
 								}
 								break;
 							case SDL.KeySymbol.DOWN:
@@ -117,7 +117,7 @@ namespace SpaceFight{
 								}else{
 									seleccion.set_data(posnam,seleccion.get_data(posnam) +1);
 									seleccion.place.y +=40;
-									window.flip();
+									render.present();
 								}
 								break;
 							case SDL.KeySymbol.RETURN:
@@ -127,26 +127,26 @@ namespace SpaceFight{
 										var game = new Game(1, window);
 										game.run();
 										splash.draw(window);
-										window.flip();
+										render.present();
 										break;
 									case 1:
 										level = 2;
 										var game = new Game(2, window);
 										game.run();
 										splash.draw(window);
-										window.flip();
+										render.present();
 										break;
 									case 2:
 										level = 3;
 										var game = new Game(3, window);
 										game.run();
 										splash.draw(window);
-										window.flip();
+										render.present();
 										break;
 									case 3:
 										instruccion();
 										splash.draw(window);
-										window.flip();
+										render.present();
 										break;
 									case 4:
 										good = false;
@@ -167,12 +167,12 @@ namespace SpaceFight{
 
 		}
 		private void init_video() {	
-			window = new Window("Space Fight", SDL.Window.POS_CENTERED, SDL.Window.POS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, EVERYTHING)
+			window = new Window("Space Fight", SDL.Window.POS_CENTERED, SDL.Window.POS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, EVERYTHING);
 			if (this.window == null) {
 				GLib.error("Failed to star: Are you sure there is a SDL2 lib on your system?");
 			}
-			render = new Renderer.from_window(window, 
-			icono.load(new RWops("img/icono.bmp", rb), 0);
+			render = SDL.Renderer.get_from_window(window); 
+			icono.load(new RWops("img/icono.bmp", "rb"), 0);
 			window.set_icon(icono);
 			SDL.GL.set_attribute(SDL.GLattr.DOUBLEBUFFER, 1);
 		}
@@ -199,7 +199,7 @@ namespace SpaceFight{
 			while (check){
 				SDL.Event event1;
 				while (event1.poll() == 1) {
-					screen.flip();
+					render.present();
 					switch (event1.type) {
 						case EventType.QUIT:
 							check = false;

@@ -23,10 +23,10 @@ namespace SpaceFight{
 
 		private unowned SDL.Texture img{get;set;}
 
-		public void load (string path, SDL.Renderer renderer) {
+		public void load (string path, SDL.Renderer render) {
 			SDl.Surface surf = SDL.Surface.load(new RWops(path, rb), 0);
 			surf.set_colorkey(SDL_SRCCOLORKEY|SDL_RLEACCEL, 1 );
-			img = new Texture.from_surface(SDL.Renderer renderer, SDL.Surface surf);
+			img = new Texture.from_surface(SDL.Renderer render, SDL.Surface surf);
 			surf.unref();
 		}
 		public void unload () {
@@ -43,12 +43,13 @@ namespace SpaceFight{
 		private Frame[] sprite;
 		private bool active {get;set;}
 		private SDL.Rect place{get;set;}
+		private SDL.Renderer render;
 
 		// Constructor
-		public Sprite (string path, int x = 0,int  y = 0) {
+		public Sprite (string path, int x = 0,int  y = 0, SDL.Renderer render = null) {
 			sprite = Frame[1];
 			nframes = 1;
-			sprite[0].load(path);
+			sprite[0].load(path, render);
 			cont = 0;
 			state = 1;
 			active = true;
@@ -56,31 +57,34 @@ namespace SpaceFight{
 			place.y = y;
 			place.w = sprite[0].img.w;
 			place.h = sprite[0].img.h;
+			this.render = render;
 		}
-		public Sprite.from_empty(int nc = 1){
+		public Sprite.from_empty(int nc = 1, SDL.Renderer render = null){
 			sprite = Frame[nc];
 			nframes = nc;
 			cont = 0;
 			state = 1;
 			active = true;
+			this.render = render;
 			place.w = 0;
 			place.h = 0;
 			place.x = 0;
 			place.y = 0;
 		}
-		public Sprite.from_pathlist(string[] pathlist){
+		public Sprite.from_pathlist(string[] pathlist, SDL.Renderer render = null){
 			sprite = Frame[pathlist.length];
 			nframes = pathlist.length;
 			active= true;
 			cont = 0;
 			state = 1;
 			for (int i = 0; i < pathlist.length; i++) {
-				sprite[i].load(pathlist[i]);
+				sprite[i].load(pathlist[i], render);
 				place.x = 0;
 				place.y = 0;
 				place.w = sprite[0].img.w;
 				place.h = sprite[0].img.h;
 			}
+			this.render = render;
 		}
 
 		/* Method definitions */
@@ -133,11 +137,11 @@ namespace SpaceFight{
 		public int frames () {
 			return cont;
 		}
-		public void draw (ref SDL.Render renderer, SDL.Rect srcrect = null) {
+		public void draw (ref SDL.Render renderer = this.render, SDL.Rect srcrect = null) {
 			renderer.copy(sprite[state].img, srcrect, place);
 			
 		}
-		public void animate(ref SDL.Render renderer, SDL.Rect srcrect = null){
+		public void animate(ref SDL.Render renderer = this.render, SDL.Rect srcrect = null){
 			
 			if(nframes > 1){
 				if (state == nframes){
