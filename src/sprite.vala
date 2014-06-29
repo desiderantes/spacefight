@@ -19,22 +19,12 @@ using SDL;
 using SDLImage;
 using GLib;
 namespace SpaceFight{
-	public struct Frame{
-
-		private unowned SDL.Texture img{get;set;}
-
-		public void load (string path, SDL.Renderer render) {
-			SDL.Surface surf = SDL.Surface.load(new RWops(path, rb), 0);
-			surf.set_colorkey(SDL_SRCCOLORKEY|SDL_RLEACCEL, 1 );
-			img = new Texture.from_surface(SDL.Renderer render, SDL.Surface surf);
-			surf.unref();
+	struct Frame{	
+		public Frame (string path, SDL.Renderer render) {
+			img = SDLImage.load_texture(SDL.Renderer renderer, string path);
 		}
-		public void unload () {
-			img.unref();
-		}
+		public SDL.Texture? img{get;set;}
 	}
-
-
 	public class Sprite : Object {
 
 		private uint8 state;//The actual frame

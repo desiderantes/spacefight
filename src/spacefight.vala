@@ -25,7 +25,7 @@ namespace SpaceFight{
 		private Sprite  boton1;
 		private Sprite  boton2;
 		private Sprite  boton3;
-		private Music background_music;
+		private SDLMixer.Music background_music;
 		private SDL.Surface icon;
 		private SDL.Window window;
 		private SDL.Renderer render;
@@ -44,8 +44,10 @@ namespace SpaceFight{
 		public static int main (string[] args) 
 		{
 			SDL.init(InitFlag.EVERYTHING);
+			SDLImage.init(SDLImage.InitFlags.ALL);
 			var app = new SpaceFight();
 			app.run();
+			SDLImage.quit ();
 			SDL.quit ();
 
 			return 0;
@@ -169,11 +171,11 @@ namespace SpaceFight{
 		private void init_video() {	
 			window = new Window("Space Fight", SDL.Window.POS_CENTERED, SDL.Window.POS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, EVERYTHING);
 			if (this.window == null) {
-				GLib.error("Failed to star: Are you sure there is a SDL2 lib on your system?");
+				GLib.error("Failed to start: Are you sure there is a SDL2 lib on your system?");
 			}
 			render = SDL.Renderer.get_from_window(window); 
-			icono.load(new RWops("img/icono.bmp", "rb"), 0);
-			window.set_icon(icono);
+			icon.load(new RWops("img/icono.bmp", "rb"), 0);
+			window.set_icon(icon);
 			SDL.GL.set_attribute(SDL.GLattr.DOUBLEBUFFER, 1);
 		}
 
@@ -196,19 +198,8 @@ namespace SpaceFight{
 			}
 			text.draw(render);
 			render.present();
-			while (check){
-				SDL.Event event1;
-				while (event1.poll() == 1) {
-					render.present();
-					switch (event1.type) {
-						case EventType.QUIT:
-							check = false;
-							break;
-						case EventType.KEYDOWN:
-							check = false;
-							break;	
-					}
-				}
+			for (SDL.Event e = {0}; e.type != SDL.EventType.QUIT; Event.poll (out e)){
+				render.present ();
 			}
 		}
 	}

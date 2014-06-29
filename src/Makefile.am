@@ -19,7 +19,7 @@ bin_PROGRAMS = spacefight
 spacefight_SOURCES = \
 	spacefight.vala config.vapi actor.vala game.vala shot.vala sprite.vala
 
-spacefight_VALAFLAGS =  --pkg SDL2_image --pkg SDL2_mixer --pkg sdl2  \
+spacefight_VALAFLAGS =  --pkg sdl2-image --pkg sdl2-mixer --pkg sdl2  \
 	--pkg gtk+-3.0
 
 
