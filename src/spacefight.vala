@@ -18,7 +18,7 @@
 
 using GLib;
 using SDL;
-using SDLGraphics;
+using SDLImage;
 using SDLMixer;
 namespace SpaceFight{
 	public class SpaceFight : Application {

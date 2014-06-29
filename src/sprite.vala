@@ -16,7 +16,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 using SDL;
-using SDLGraphics;
+using SDLImage;
 using GLib;
 namespace SpaceFight{
 	public struct Frame{
@@ -24,7 +24,7 @@ namespace SpaceFight{
 		private unowned SDL.Texture img{get;set;}
 
 		public void load (string path, SDL.Renderer render) {
-			SDl.Surface surf = SDL.Surface.load(new RWops(path, rb), 0);
+			SDL.Surface surf = SDL.Surface.load(new RWops(path, rb), 0);
 			surf.set_colorkey(SDL_SRCCOLORKEY|SDL_RLEACCEL, 1 );
 			img = new Texture.from_surface(SDL.Renderer render, SDL.Surface surf);
 			surf.unref();

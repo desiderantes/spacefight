@@ -18,7 +18,7 @@
 
 using SDL;
 using GLib;
-using SDLGraphics;
+using SDLImage;
 namespace SpaceFight{
 
 	public class Actor : Sprite{

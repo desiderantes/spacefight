@@ -5,27 +5,37 @@
 
 
 AM_CPPFLAGS = \
-	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
+	-DPACKAGE_LOCALE_DIR=\""$(localedir)"\" \
 	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
-	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
-	$(SPACEFIGHT_CFLAGS) \
-	$(sdl_CFLAGS)
+	-DPACKAGE_DATA_DIR=\""$(pkgdatadir)"\" \
+	$(SPACEFIGHT_CFLAGS)
 
 AM_CFLAGS =\
 	 -Wall\
 	 -g
 
-VALAFLAGS =  --pkg SDL_gfx  \
-	--pkg gtk+-3.0
-
 bin_PROGRAMS = spacefight
 
 spacefight_SOURCES = \
-	spacefight.vala config.vapi sprite.vala game.vala shot.vala actor.vala
+	spacefight.vala config.vapi actor.vala game.vala shot.vala sprite.vala
 
-spacefight_LDFLAGS = \
-	-Wl,--export-dynamic
+spacefight_VALAFLAGS =  --pkg SDL2_image --pkg SDL2_mixer --pkg sdl2  \
+	--pkg gtk+-3.0
 
-spacefight_LDADD = $(SPACEFIGHT_LIBS) \
-	$(sdl_LIBS)
+
+spacefight_LDFLAGS =
+
+spacefight_LDADD = $(SPACEFIGHT_LIBS)
+
+
+if PLATFORM_WIN32
+spacefight_LDFLAGS += -Wl,--export-all-symbols
+else
+spacefight_LDFLAGS += -Wl,--export-dynamic
+endif
+
+if NATIVE_WIN32
+spacefight_LDFLAGS += -mwindows
+endif
+
 

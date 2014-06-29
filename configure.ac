@@ -12,18 +12,36 @@ AM_SILENT_RULES([yes])
 AC_PROG_CC
 
 
-LT_INIT
+dnl ***************************************************************************
+dnl Check for Windows
+dnl ***************************************************************************
+AC_CANONICAL_HOST
 
+case $host_os in
+  *mingw*)
+    platform_win32=yes
+    native_win32=yes
+    ;;
+  pw32* | *cygwin*)
+    platform_win32=yes
+    native_win32=no
+    ;;
+  *)
+    platform_win32=no
+    native_win32=no
+    ;;
+esac
+AM_CONDITIONAL(PLATFORM_WIN32, test x"$platform_win32" = "xyes")
+AM_CONDITIONAL(NATIVE_WIN32, test x"$native_win32" = "xyes")
+
+
+LT_INIT([win32-dll])
 
 dnl Check for vala
 AM_PROG_VALAC([0.10.0])
 
 
-PKG_CHECK_MODULES(SPACEFIGHT, SDL_gfx
-SDL2_mixer
-sdl2
-SDL2_image
-[gtk+-3.0])
+PKG_CHECK_MODULES(SPACEFIGHT, [gtk+-3.0 SDL2_image SDL2_mixer sdl2])
 
 
 AC_OUTPUT([
