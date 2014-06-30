@@ -31,8 +31,8 @@ namespace SpaceFight{
 			try {
 				shot_list.append( new Shot(this.place.x + (this.place.w / 2) as int, this.place.y, movement));
 			}
-			catch (Error e){
-				stdout.prinft(e.message);
+			catch (GLib.Error e){
+				GLib.debug(e.message);
 				return false;
 			}
 			finally {return true;}

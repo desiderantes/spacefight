@@ -19,38 +19,39 @@ using SDL;
 using SDLImage;
 using GLib;
 namespace SpaceFight{
-	struct Frame{	
+	public struct Frame{	
 		public Frame (string path, SDL.Renderer render) {
-			img = SDLImage.load_texture(SDL.Renderer renderer, string path);
+			img = SDLImage.load_texture(render, path);
 		}
 		public SDL.Texture? img{get;set;}
 	}
 	public class Sprite : Object {
 
-		private uint8 state;//The actual frame
-		private uint8 cont;
-		private uint8 nframes;//Number of frames
+		private uint16 state;//The actual frame
+		private uint16 cont;
+		private uint16 nframes;//Number of frames
 		private Frame[] sprite;
 		private bool active {get;set;}
 		private SDL.Rect place{get;set;}
-		private SDL.Renderer render;
+		private SDL.Renderer? render;
 
 		// Constructor
-		public Sprite (string path, int x = 0,int  y = 0, SDL.Renderer render = null) {
-			sprite = Frame[1];
+		public Sprite (string path, int x = 0,int  y = 0, SDL.Renderer? render = null) {
+			sprite = new Frame[1];
 			nframes = 1;
-			sprite[0].load(path, render);
+			sprite[0] = Frame(path, render);
 			cont = 0;
 			state = 1;
 			active = true;
 			place.x = x;
 			place.y = y;
-			place.w = sprite[0].img.w;
-			place.h = sprite[0].img.h;
+			int access;
+			SDL.PixelRAWFormat format;
+			sprite[0].img.query(out format, out access, out place.w, out place.h); 
 			this.render = render;
 		}
-		public Sprite.from_empty(int nc = 1, SDL.Renderer render = null){
-			sprite = Frame[nc];
+		public Sprite.from_empty(uint16 nc = 1, SDL.Renderer? render = null){
+			sprite = new Frame[nc];
 			nframes = nc;
 			cont = 0;
 			state = 1;
@@ -61,18 +62,19 @@ namespace SpaceFight{
 			place.x = 0;
 			place.y = 0;
 		}
-		public Sprite.from_pathlist(string[] pathlist, SDL.Renderer render = null){
-			sprite = Frame[pathlist.length];
-			nframes = pathlist.length;
+		public Sprite.from_pathlist(string[] pathlist, SDL.Renderer? render = null){
+			sprite = new Frame[pathlist.length];
+			nframes = pathlist.length as uint16;
 			active= true;
 			cont = 0;
 			state = 1;
 			for (int i = 0; i < pathlist.length; i++) {
-				sprite[i].load(pathlist[i], render);
+				sprite[i] = Frame(pathlist[i], render);
 				place.x = 0;
 				place.y = 0;
-				place.w = sprite[0].img.w;
-				place.h = sprite[0].img.h;
+				int access;
+				SDL.PixelRAWFormat format;
+				sprite[0].img.query(out format, out access, out place.w, out place.h);
 			}
 			this.render = render;
 		}
@@ -84,11 +86,16 @@ namespace SpaceFight{
 				sprite[cont] = frame;
 				cont++;
 				state = cont+ 1;
-				if(place.w < frame.img.w){
-					place.w = frame.img.w;
+				int h;
+				int w;
+				int access;
+				SDL.PixelRAWFormat format;
+				sprite[cont].img.query(out format,out access,out w,out h);
+				if(place.w < w){
+					place.w = w;
 				}
-				if (place.h < frame.img.h){ 
-					place.h = frame.img.h;
+				if (place.h < h){ 
+					place.h = h;
 				}
 			}
 			else {
@@ -98,13 +105,17 @@ namespace SpaceFight{
 
 		public void add_img(string path){
 			if(cont < nframes){
-				sprite[cont] = Frame();
-				sprite[cont].load(path);
-				if(place.w < sprite[cont].img.w){
-					place.w = sprite[cont].img.w;
+				sprite[cont] = Frame(path, this.render);
+				int h;
+				int w;
+				int access;
+				SDL.PixelRAWFormat format;
+				sprite[cont].img.query(out format,out access,out w,out h);
+				if(place.w < w){
+					place.w = w;
 				}
-				if (place.h < sprite[cont].img.h){ 
-					place.h = sprite[cont].img.h;
+				if (place.h < h){ 
+					place.h = h;
 				}
 				cont++;
 				state = cont+ 1;
@@ -112,14 +123,19 @@ namespace SpaceFight{
 			}
 			else {
 				sprite = new Frame[1];
-				sprite[0].load(path);
-				place.w = sprite[0].img.w; 
-				place.h = sprite[0].img.h;
+				sprite[0] = Frame(path, this.render);
+				int h;
+				int w;
+				int access;
+				SDL.PixelRAWFormat format;
+				sprite[cont].img.query(out format,out access,out w,out h);
+				place.w = w; 
+				place.h = h;
 				cont++;
 				state = cont+ 1;
 			}
 		}
-		public void select_frame (int nf) {
+		public void select_frame (uint16 nf) {
 			if(nf <= cont){
 				state = nf;
 			}
@@ -127,11 +143,11 @@ namespace SpaceFight{
 		public int frames () {
 			return cont;
 		}
-		public void draw (ref SDL.Render renderer = this.render, SDL.Rect srcrect = null) {
+		public void draw ( SDL.Renderer renderer = this.render, SDL.Rect? srcrect = null) {
 			renderer.copy(sprite[state].img, srcrect, place);
 			
 		}
-		public void animate(ref SDL.Render renderer = this.render, SDL.Rect srcrect = null){
+		public void animate( SDL.Renderer renderer = this.render, SDL.Rect? srcrect = null){
 			
 			if(nframes > 1){
 				if (state == nframes){

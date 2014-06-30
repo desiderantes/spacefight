@@ -2,11 +2,11 @@
 /* spacefight.c
  * spacefight.vala
  * Copyright (C) Mario Daniel Ruiz Saavedra 2013 <desiderantes@rocketmail.com>
- * SpaceFight is free software: you can redistribute it and/or modify it
+	 * SpaceFight is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+	 * 
  * SpaceFight is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -40,7 +40,7 @@ namespace SpaceFight{
 			init_video ();
 			init_music ();
 		}
-		
+
 		public static int main (string[] args) 
 		{
 			SDL.init(InitFlag.EVERYTHING);
@@ -86,95 +86,89 @@ namespace SpaceFight{
 			seleccion.place.w= botones[0].place.w;
 			seleccion.actual_frame().set_alpha(SDL_SRCALPHA|SDL_RLEACCEL,150);
 			seleccion.draw(window);
-			const string posnam = "posicion";
+			const string posnam = "position";
 			seleccion.set_data<uint8>(posnam, 0);
-			while (good){
-				SDL.Event event;
-				while (event.poll() == 1) {
-					render.present();
-					switch (event.type) {
-						case EventType.QUIT:
-							good = false;
+			for (SDL.Event event = {0}; event.type != SDL.EventType.QUIT; Event.poll (out event)){
+				render.present();
+				switch (event.type) {
+					case EventType.KEYDOWN:
+						switch ( event.key.keysym )
+					{
+						case SDL.KeySymbol.ESCAPE:
+							// ESC key was pressed
+							return;
+							SDL.quit();
 							break;
-						case EventType.KEYDOWN:
-							switch ( event.key.sym )
-						{
-							case SDL.KeySymbol.ESCAPE:
-								// ESC key was pressed
-								good = false;
-								SDL.quit();
+						case SDL.KeySymbol.UP:
+							if(seleccion.get_data(posnam) == 0){
 								break;
-							case SDL.KeySymbol.UP:
-								if(seleccion.get_data(posnam) == 0){
-									break;
-								}else{
-									seleccion.set_data(posnam,seleccion.get_data(posnam) -1);
-									seleccion.place.y -=40;
+							}else{
+								seleccion.set_data(posnam,seleccion.get_data(posnam) -1);
+								seleccion.place.y -=40;
+								render.present();
+							}
+							break;
+						case SDL.KeySymbol.DOWN:
+							if (seleccion.get_data(posnam) ==4){
+								break;
+							}else{
+								seleccion.set_data(posnam,seleccion.get_data(posnam) +1);
+								seleccion.place.y +=40;
+								render.present();
+							}
+							break;
+						case SDL.KeySymbol.RETURN:
+							switch (seleccion.get_data(posnam)){
+								case 0:
+									level = 1;
+									var game = new Game(1, window);
+									game.run();
+									splash.draw(window);
 									render.present();
-								}
-								break;
-							case SDL.KeySymbol.DOWN:
-								if (seleccion.get_data(posnam) ==4){
 									break;
-								}else{
-									seleccion.set_data(posnam,seleccion.get_data(posnam) +1);
-									seleccion.place.y +=40;
+								case 1:
+									level = 2;
+									var game = new Game(2, window);
+									game.run();
+									splash.draw(window);
 									render.present();
-								}
-								break;
-							case SDL.KeySymbol.RETURN:
-								switch (seleccion.get_data(posnam)){
-									case 0:
-										level = 1;
-										var game = new Game(1, window);
-										game.run();
-										splash.draw(window);
-										render.present();
-										break;
-									case 1:
-										level = 2;
-										var game = new Game(2, window);
-										game.run();
-										splash.draw(window);
-										render.present();
-										break;
-									case 2:
-										level = 3;
-										var game = new Game(3, window);
-										game.run();
-										splash.draw(window);
-										render.present();
-										break;
-									case 3:
-										instruccion();
-										splash.draw(window);
-										render.present();
-										break;
-									case 4:
-										good = false;
-										SDL.quit();//Nos salimos del juego
-										break;
-									default:
-										break;
-								}
+									break;
+								case 2:
+									level = 3;
+									var game = new Game(3, window);
+									game.run();
+									splash.draw(window);
+									render.present();
+									break;
+								case 3:
+									instruccion();
+									splash.draw(window);
+									render.present();
+									break;
+								case 4:
+									return;
+									SDL.quit();//Nos salimos del juego
+									break;
+								default:
+									break;
+							}
 
-							default:
-								break;
-						}
-					}                
-					break;
-				}
+						default:
+							break;
+					}
+				}                
 			}
+
 
 
 		}
 		private void init_video() {	
-			window = new Window("Space Fight", SDL.Window.POS_CENTERED, SDL.Window.POS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, EVERYTHING);
+			window = new Window("Space Fight", SDL.Window.POS_CENTERED, SDL.Window.POS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL.InitFlag.EVERYTHING);
 			if (this.window == null) {
 				GLib.error("Failed to start: Are you sure there is a SDL2 lib on your system?");
 			}
 			render = SDL.Renderer.get_from_window(window); 
-			icon.load(new RWops("img/icono.bmp", "rb"), 0);
+			icon = new SDL.Surface.from_bmp ("img/icono.bmp");
 			window.set_icon(icon);
 			SDL.GL.set_attribute(SDL.GLattr.DOUBLEBUFFER, 1);
 		}
@@ -184,9 +178,9 @@ namespace SpaceFight{
 				GLib.error("Error loading audio: %s \n", SDL.get_error());
 				SDL.quit();
 			}
-			musica = new SDLMixer.Music("sounds/Realintro.mid");
-			musica.volume(100);
-			musica.play(-1);
+			background_music = new SDLMixer.Music("sounds/Realintro.mid");
+			background_music.volume(100);
+			background_music.play(-1);
 		}
 
 		private void instruccion(){

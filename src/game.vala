@@ -2,11 +2,11 @@
 /* game.c
  * game.vala
  * Copyright (C) Mario Daniel Ruiz Saavedra 2013 <desiderantes@rocketmail.com>
- * SpaceFight is free software: you can redistribute it and/or modify it
+	 * SpaceFight is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+	 * 
  * SpaceFight is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -126,58 +126,51 @@ namespace SpaceFight{
 
 
 		public void process_events(){
-			SDL.Event event;
-			while (event.poll() == 1) {
+			for (SDL.Event event = {0}; event.type != SDL.EventType.QUIT; Event.poll (out event)){	
 				render.present();
 				switch (event.type) {
-					case EventType.QUIT:
-						done = true;
-						break;
 					case EventType.KEYDOWN:
-						switch ( event.key.sym )
-					{
-						case SDL.KeySymbol.ESCAPE:
-							// ESC key was pressed
-							done = true;
-							this.end();
-							break;
-						case SDL.KeySymbol.LEFT:
-							if(ship.place.x > 0) {
-								ship.place.x -=3;
-							}
-							break;
-						case SDL.KeySymbol.RIGHT:
-							if(ship.place.x  + ship.place.w < SCREEN_WIDTH) {
-								ship.place.x +=3;
-							}
-							break;
-						case SDL.KeySymbol.UP:
-							if(ship.place.y > 0) {
-								ship.place.y -= 5;
-								if(ship.place.y < (SCREEN_HEIGHT - ship.place.h * 3.5 )){
-									ship.place.y = SCREEN_HEIGHT - ship.place.h * 3.5 ;
+						switch ( event.key.keysym.sym ){
+							case SDL.KeySymbol.ESCAPE:
+								// ESC key was pressed
+								done = true;
+								this.end();
+								break;
+							case SDL.KeySymbol.LEFT:
+								if(ship.place.x > 0) {
+									ship.place.x -=3;
 								}
-							}
-							break;
-						case SDL.KeySymbol.DOWN:
-							if(ship.place.y + ship.place.h < SCREEN_HEIGHT) {
-								ship.place.y += 5;
-							}
-							break;
-						case SDL.KeySymbol.SPACE:
-							ship.shoot(ship_shots);
+								break;
+							case SDL.KeySymbol.RIGHT:
+								if(ship.place.x  + ship.place.w < SCREEN_WIDTH) {
+									ship.place.x +=3;
+								}
+								break;
+							case SDL.KeySymbol.UP:
+								if(ship.place.y > 0) {
+									ship.place.y -= 5;
+									if(ship.place.y < (SCREEN_HEIGHT - ship.place.h * 3.5 )){
+										ship.place.y = SCREEN_HEIGHT - ship.place.h * 3.5 ;
+									}
+								}
+								break;
+							case SDL.KeySymbol.DOWN:
+								if(ship.place.y + ship.place.h < SCREEN_HEIGHT) {
+									ship.place.y += 5;
+								}
+								break;
+							case SDL.KeySymbol.SPACE:
+								ship.shoot(ship_shots);
 
-						default:
-							break;
-					}
+							default:
+								break;
+						}
 				}                
-				break;
 			}
 		}
 
 		public void end(){
-		//FIXME Not complete
-		bool check = true;
+			//FIXME Not complete
 			var text = new Sprite("img/perdiste.bmp");
 			if(text.img== null){ // En caso de no cargarse la imagen, advertimos al usuario
 				GLib.error("No se ha podido cargar la imagen: %s\n", SDL.get_error());
@@ -185,19 +178,8 @@ namespace SpaceFight{
 			}
 			text.draw(render);
 			render.present();
-			while (check){
-				SDL.Event event1;
-				while (event1.poll() == 1) {
-					render.present();
-					switch (event1.type) {
-						case EventType.QUIT:
-							check = false;
-							break;
-						case EventType.KEYDOWN:
-							check = false;
-							break;	
-					}
-				}
+			for (SDL.Event e = {0}; e.type != SDL.EventType.QUIT || e.type != SDL.EventType.KEYDOWN; Event.poll (out e)){
+				render.present();
 			}
 		}
 	}	  
