@@ -57,92 +57,88 @@ namespace SpaceFight{
 		}
 		private void menu(){
 			uint16 ex=SCREEN_WIDTH / 40;
-			uint16 ey =(SCREEN_HEIGHT/10) * 6 as uint16;
+			uint16 ey =(SCREEN_HEIGHT/10) * 6 ;
 			bool good = true;
 			var splash = new Sprite("img/splash.bmp");
 			var seleccion = new Sprite("img/selector.bmp");
 			Sprite botones[5];
-			if(splash.img== null){ // En caso de no cargarse la imagen, advertimos al usuario
-				stdout.printf(stderr, "No se ha podido cargar la imagen: %s\n", SDL.GetError());
+			if(splash.actual_frame.img== null){ // En caso de no cargarse la imagen, advertimos al usuario
+				GLib.error("No se ha podido cargar la imagen: %s\n", SDL.get_error());
 				SDL.quit();
 			}
 
-			splash.draw(window);
-			for (i = 0; i < 5; i++){
+			splash.draw(render);
+			for (int i = 0; i < 5; i++){
 				botones[i] = new Sprite("img/boton"+(i+1).to_string()+".bmp");
 				botones[i].place.x=SCREEN_WIDTH/2;
 				botones[i].place.y=ey;
 				ey+= SCREEN_WIDTH/12;
-				if(botones[i].place == null){// En caso de no cargarse alguna imagen, con malévolos motivos de depuración
-					GLib.error("No se ha podido cargar la imagen para el boton %d: %s\n", i, SDL.GetError());
-					return EXIT_FAILURE;
+				if(botones[i].actual_frame.img == null){// En caso de no cargarse alguna imagen, con malévolos motivos de depuración
+					GLib.error("No se ha podido cargar la imagen para el boton %d: %s\n", i, SDL.get_error());
+					SDL.quit ();
 				}
-				botones[i].actual_frame().img.set_colorkey(SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL.PixelFormat.map_rbga(255, 255, 255,255));
-				botones[i].draw(window);
+				botones[i].actual_frame.img.set_color_mod(255, 255, 255);
+				botones[i].draw(render);
 			}
 			seleccion.place.x= botones[0].place.x;
 			seleccion.place.y= botones[0].place.y;
 			seleccion.place.h= botones[0].place.h;
 			seleccion.place.w= botones[0].place.w;
-			seleccion.actual_frame().set_alpha(SDL_SRCALPHA|SDL_RLEACCEL,150);
-			seleccion.draw(window);
+			seleccion.actual_frame.img.set_alpha_mod(150);
+			seleccion.draw(render);
 			const string posnam = "position";
-			seleccion.set_data<uint8>(posnam, 0);
+			seleccion.set_data<uint16>(posnam, 0);
 			for (SDL.Event event = {0}; event.type != SDL.EventType.QUIT; Event.poll (out event)){
 				render.present();
 				switch (event.type) {
 					case EventType.KEYDOWN:
-						switch ( event.key.keysym )
-					{
-						case SDL.KeySymbol.ESCAPE:
+						switch ( event.key.keysym.sym ){
+						case SDL.Keycode.ESCAPE:
 							// ESC key was pressed
 							return;
 							SDL.quit();
 							break;
-						case SDL.KeySymbol.UP:
-							if(seleccion.get_data(posnam) == 0){
+						case SDL.Keycode.UP:
+							if(seleccion.get_data<uint16>(posnam) == 0){
 								break;
 							}else{
-								seleccion.set_data(posnam,seleccion.get_data(posnam) -1);
+								seleccion.set_data<uint16>(posnam,seleccion.get_data<uint16>(posnam) -1);
 								seleccion.place.y -=40;
 								render.present();
 							}
 							break;
-						case SDL.KeySymbol.DOWN:
-							if (seleccion.get_data(posnam) ==4){
+						case SDL.Keycode.DOWN:
+							if (seleccion.get_data<uint16>(posnam) ==4){
 								break;
 							}else{
-								seleccion.set_data(posnam,seleccion.get_data(posnam) +1);
+								seleccion.set_data<uint16>(posnam,seleccion.get_data<uint16>(posnam) +1);
 								seleccion.place.y +=40;
 								render.present();
 							}
 							break;
-						case SDL.KeySymbol.RETURN:
-							switch (seleccion.get_data(posnam)){
+						case SDL.Keycode.RETURN:
+							switch (seleccion.get_data<uint16>(posnam)){
 								case 0:
-									level = 1;
-									var game = new Game(1, window);
+									var game = new Game(1, render, SCREEN_WIDTH, SCREEN_HEIGHT);
 									game.run();
-									splash.draw(window);
+									splash.draw(render);
 									render.present();
 									break;
 								case 1:
-									level = 2;
-									var game = new Game(2, window);
+									var game = new Game(2, render, SCREEN_WIDTH, SCREEN_HEIGHT);
 									game.run();
-									splash.draw(window);
+									splash.draw(render);
 									render.present();
 									break;
 								case 2:
-									level = 3;
-									var game = new Game(3, window);
+									var game = new Game(3, render, SCREEN_WIDTH, SCREEN_HEIGHT);
 									game.run();
-									splash.draw(window);
+									splash.draw(render);
 									render.present();
 									break;
 								case 3:
 									instruccion();
-									splash.draw(window);
+									splash.draw(render);
 									render.present();
 									break;
 								case 4:
@@ -152,10 +148,11 @@ namespace SpaceFight{
 								default:
 									break;
 							}
-
+							break;
 						default:
 							break;
 					}
+					break;
 				}                
 			}
 
@@ -174,7 +171,7 @@ namespace SpaceFight{
 		}
 
 		public void init_music(){
-			if(SDLMixer.open(22050, AUDIO_S16, 2, 4096)){
+			if(SDLMixer.open(22050, 0x8010, 2, 4096) != 0){
 				GLib.error("Error loading audio: %s \n", SDL.get_error());
 				SDL.quit();
 			}
@@ -186,7 +183,7 @@ namespace SpaceFight{
 		private void instruccion(){
 			bool check = true;
 			var text = new Sprite("img/instrucciones.bmp");
-			if(text.img== null){ // En caso de no cargarse la imagen, advertimos al usuario
+			if(text.actual_frame.img== null){ // En caso de no cargarse la imagen, advertimos al usuario
 				GLib.error("No se ha podido cargar la imagen: %s\n", SDL.get_error());
 				SDL.quit();
 			}

@@ -25,17 +25,18 @@ namespace SpaceFight{
 		public bool type;
 		public Actor (string path, bool type = false, int x= 0, int y=0){
 			base(path, x, y);
+			this.type = type;
 		}
 
-		public virtual bool shoot( ref List<Shot> shot_list){
+		public virtual bool shoot( List<Shot> shot_list){
 			try {
-				shot_list.append( new Shot(this.place.x + (this.place.w / 2) as int, this.place.y, movement));
+				shot_list.append( new Shot( (uint16)(this.place.x + (this.place.w / 2)), (uint16)this.place.y , type));
 			}
 			catch (GLib.Error e){
 				GLib.debug(e.message);
 				return false;
 			}
-			finally {return true;}
+			return true;
 		}
 
 

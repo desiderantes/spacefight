@@ -20,10 +20,11 @@ using SDLImage;
 using GLib;
 namespace SpaceFight{
 	public struct Frame{	
+		private SDL.Texture texture;
 		public Frame (string path, SDL.Renderer render) {
-			img = SDLImage.load_texture(render, path);
+			texture = SDLImage.load_texture(render, path);
 		}
-		public SDL.Texture? img{get;set;}
+		public SDL.Texture? img{ get{return texture;}}
 	}
 	public class Sprite : Object {
 
@@ -31,9 +32,11 @@ namespace SpaceFight{
 		private uint16 cont;
 		private uint16 nframes;//Number of frames
 		private Frame[] sprite;
-		private bool active {get;set;}
-		private SDL.Rect place{get;set;}
+		public bool active {get;set;}
+		public SDL.Rect place{get;set;}
+		public Frame? actual_frame{get{return this.sprite[state];}}
 		private SDL.Renderer? render;
+		public uint8 movement = 1;
 
 		// Constructor
 		public Sprite (string path, int x = 0,int  y = 0, SDL.Renderer? render = null) {
@@ -159,9 +162,7 @@ namespace SpaceFight{
 			}
 			this.draw(renderer, srcrect);
 		}
-		public Frame actual_frame(){
-			return sprite[state];
-		}
+
 		public bool colision (Sprite sp) {
 			int w1, h1, w2, h2, x1, x2, y1, y2;
 

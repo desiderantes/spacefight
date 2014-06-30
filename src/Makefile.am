@@ -23,7 +23,7 @@ spacefight_VALAFLAGS =  --pkg sdl2-image --pkg sdl2-mixer --pkg sdl2  \
 	--pkg gtk+-3.0
 
 
-spacefight_LDFLAGS =
+spacefight_LDFLAGS = -X -lSDL2_image -X -lSDL2_mixer
 
 spacefight_LDADD = $(SPACEFIGHT_LIBS)
 
