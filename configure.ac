@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 dnl Created by Anjuta application wizard.
 
-AC_INIT(spacefight, 0.1)
+AC_INIT(spacefight, 0.1, https://bugs.launchpad.net/spacefight, spacefight, https://launchpad.net/spacefight)
 
 AC_CONFIG_HEADERS([config.h])
 
