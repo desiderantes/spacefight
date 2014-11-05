@@ -1,7 +1,7 @@
 /* -*- Mode: vala; tab-width: 4; intend-tabs-mode: t -*- */
 /* spacefight.c
  * spacefight.vala
- * Copyright (C) Mario Daniel Ruiz Saavedra 2013 <desiderantes@rocketmail.com>
+ * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2014 <desiderantes@rocketmail.com>
 	 * SpaceFight is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
@@ -19,16 +19,15 @@
 using GLib;
 using SDL;
 using SDLImage;
-using SDLMixer;
 namespace SpaceFight{
 	public class SpaceFight : Application {
 		private Sprite  boton1;
 		private Sprite  boton2;
 		private Sprite  boton3;
-		private SDLMixer.Music background_music;
+		private MusicManager music;
 		private SDL.Surface icon;
-		private SDL.Window window;
-		private SDL.Renderer render;
+		protected static SDL.Window window;
+		private static SDL.Renderer render;
 		private const uint16 SCREEN_WIDTH = 800;
 		private const uint16 SCREEN_HEIGHT = 600;
 		private const uint16 SCREEN_BPP = 24;
@@ -41,8 +40,7 @@ namespace SpaceFight{
 			init_music ();
 		}
 
-		public static int main (string[] args) 
-		{
+		public static int main (string[] args){
 			SDL.init(InitFlag.EVERYTHING);
 			SDLImage.init(SDLImage.InitFlags.ALL);
 			var app = new SpaceFight();
@@ -53,39 +51,38 @@ namespace SpaceFight{
 			return 0;
 		}
 		private void run(){
+			window.show ();
 			menu();
 		}
 		private void menu(){
 			uint16 ex=SCREEN_WIDTH / 40;
 			uint16 ey =(SCREEN_HEIGHT/10) * 6 ;
 			bool good = true;
-			var splash = new Sprite("img/splash.bmp");
-			var seleccion = new Sprite("img/selector.bmp");
+			var splash = new Sprite(render,"img/splash.bmp", 0,0);
+			var seleccion = new Sprite(render,"img/selector.bmp",0,0);
 			Sprite botones[5];
-			if(splash.actual_frame.img== null){ // En caso de no cargarse la imagen, advertimos al usuario
+			if(splash.actual_frame== null){ // En caso de no cargarse la imagen, advertimos al usuario
 				GLib.error("No se ha podido cargar la imagen: %s\n", SDL.get_error());
-				SDL.quit();
 			}
 
-			splash.draw(render);
+			splash.draw();
 			for (int i = 0; i < 5; i++){
-				botones[i] = new Sprite("img/boton"+(i+1).to_string()+".bmp");
+				botones[i] = new Sprite(render,"img/boton"+(i+1).to_string()+".bmp",0,0);
 				botones[i].place.x=SCREEN_WIDTH/2;
 				botones[i].place.y=ey;
 				ey+= SCREEN_WIDTH/12;
-				if(botones[i].actual_frame.img == null){// En caso de no cargarse alguna imagen, con malévolos motivos de depuración
+				if(botones[i].actual_frame == null){// En caso de no cargarse alguna imagen, con malévolos motivos de depuración
 					GLib.error("No se ha podido cargar la imagen para el boton %d: %s\n", i, SDL.get_error());
-					SDL.quit ();
 				}
-				botones[i].actual_frame.img.set_color_mod(255, 255, 255);
-				botones[i].draw(render);
+				botones[i].actual_frame.set_color_mod(255, 255, 255);
+				botones[i].draw();
 			}
 			seleccion.place.x= botones[0].place.x;
 			seleccion.place.y= botones[0].place.y;
 			seleccion.place.h= botones[0].place.h;
 			seleccion.place.w= botones[0].place.w;
-			seleccion.actual_frame.img.set_alpha_mod(150);
-			seleccion.draw(render);
+			seleccion.actual_frame.set_alpha_mod(150);
+			seleccion.draw();
 			const string posnam = "position";
 			seleccion.set_data<uint16>(posnam, 0);
 			for (SDL.Event event = {0}; event.type != SDL.EventType.QUIT; Event.poll (out event)){
@@ -96,7 +93,6 @@ namespace SpaceFight{
 						case SDL.Keycode.ESCAPE:
 							// ESC key was pressed
 							return;
-							SDL.quit();
 							break;
 						case SDL.Keycode.UP:
 							if(seleccion.get_data<uint16>(posnam) == 0){
@@ -121,29 +117,28 @@ namespace SpaceFight{
 								case 0:
 									var game = new Game(1, render, SCREEN_WIDTH, SCREEN_HEIGHT);
 									game.run();
-									splash.draw(render);
+									splash.draw();
 									render.present();
 									break;
 								case 1:
 									var game = new Game(2, render, SCREEN_WIDTH, SCREEN_HEIGHT);
 									game.run();
-									splash.draw(render);
+									splash.draw();
 									render.present();
 									break;
 								case 2:
 									var game = new Game(3, render, SCREEN_WIDTH, SCREEN_HEIGHT);
 									game.run();
-									splash.draw(render);
+									splash.draw();
 									render.present();
 									break;
 								case 3:
 									instruccion();
-									splash.draw(render);
+									splash.draw();
 									render.present();
 									break;
 								case 4:
 									return;
-									SDL.quit();//Nos salimos del juego
 									break;
 								default:
 									break;
@@ -161,9 +156,10 @@ namespace SpaceFight{
 		}
 		private void init_video() {	
 			window = new Window("Space Fight", SDL.Window.POS_CENTERED, SDL.Window.POS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL.InitFlag.EVERYTHING);
-			if (this.window == null) {
+			if (window == null) {
 				GLib.error("Failed to start: Are you sure there is a SDL2 lib on your system?");
 			}
+			SDLImage.init(SDLImage.InitFlags.ALL);
 			render = SDL.Renderer.get_from_window(window); 
 			icon = new SDL.Surface.from_bmp ("img/icono.bmp");
 			window.set_icon(icon);
@@ -171,26 +167,22 @@ namespace SpaceFight{
 		}
 
 		public void init_music(){
-			if(SDLMixer.open(22050, 0x8010, 2, 4096) != 0){
-				GLib.error("Error loading audio: %s \n", SDL.get_error());
-				SDL.quit();
-			}
-			background_music = new SDLMixer.Music("sounds/Realintro.mid");
-			background_music.volume(100);
-			background_music.play(-1);
+			music = MusicManager.instance;
+			
 		}
 
 		private void instruccion(){
 			bool check = true;
-			var text = new Sprite("img/instrucciones.bmp");
-			if(text.actual_frame.img== null){ // En caso de no cargarse la imagen, advertimos al usuario
-				GLib.error("No se ha podido cargar la imagen: %s\n", SDL.get_error());
-				SDL.quit();
+			var text = new Sprite(render,"img/instrucciones.bmp",0,0);
+			if(text.actual_frame== null){ // En caso de no cargarse la imagen, advertimos al usuario
+				GLib.error("Unable to load image: %s\n", SDL.get_error());
 			}
-			text.draw(render);
+			text.draw();
 			render.present();
+			window.update_surface ();
 			for (SDL.Event e = {0}; e.type != SDL.EventType.QUIT; Event.poll (out e)){
 				render.present ();
+				window.update_surface ();
 			}
 		}
 	}

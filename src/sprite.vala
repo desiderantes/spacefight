@@ -1,7 +1,7 @@
 /* -*- Mode: vala; tab-width: 4; intend-tabs-mode: t -*- */
 /* sprite.c
  * sprite.vala
- * Copyright (C) Mario Daniel Ruiz Saavedra 2013 <desiderantes@rocketmail.com>
+ * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2014 <desiderantes@rocketmail.com>
  * SpaceFight is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
@@ -19,42 +19,39 @@ using SDL;
 using SDLImage;
 using GLib;
 namespace SpaceFight{
-	public struct Frame{	
-		private SDL.Texture texture;
-		public Frame (string path, SDL.Renderer render) {
-			texture = SDLImage.load_texture(render, path);
-		}
-		public SDL.Texture? img{ get{return texture;}}
-	}
+	
 	public class Sprite : Object {
 
 		private uint16 state;//The actual frame
 		private uint16 cont;
 		private uint16 nframes;//Number of frames
-		private Frame[] sprite;
+		private (unowned SDL.Texture?)[] sprite;
 		public bool active {get;set;}
 		public SDL.Rect place{get;set;}
-		public Frame? actual_frame{get{return this.sprite[state];}}
-		private SDL.Renderer? render;
+		public SDL.Texture? actual_frame{get{return this.sprite[state];}}
+		public unowned SDL.Renderer render;
 		public uint8 movement = 1;
-
 		// Constructor
-		public Sprite (string path, int x = 0,int  y = 0, SDL.Renderer? render = null) {
-			sprite = new Frame[1];
+		public Sprite (SDL.Renderer render, string id, int x = 0,int  y = 0 ) {
+			sprite = new SDL.Texture[1];
 			nframes = 1;
-			sprite[0] = Frame(path, render);
+			sprite[0] = ResourceManager.instance.get_image(id);
 			cont = 0;
 			state = 1;
 			active = true;
 			place.x = x;
 			place.y = y;
+			int w;
+			int h;
 			int access;
 			SDL.PixelRAWFormat format;
-			sprite[0].img.query(out format, out access, out place.w, out place.h); 
+			sprite[0].query(out format, out access, out w, out h);
+			place.w = w;
+			place.h = h;
 			this.render = render;
 		}
-		public Sprite.from_empty(uint16 nc = 1, SDL.Renderer? render = null){
-			sprite = new Frame[nc];
+		public Sprite.from_empty (SDL.Renderer render,uint16 nc = 1){
+			sprite = new SDL.Texture[nc];
 			nframes = nc;
 			cont = 0;
 			state = 1;
@@ -65,26 +62,22 @@ namespace SpaceFight{
 			place.x = 0;
 			place.y = 0;
 		}
-		public Sprite.from_pathlist(string[] pathlist, SDL.Renderer? render = null){
-			sprite = new Frame[pathlist.length];
-			nframes = pathlist.length as uint16;
+		public Sprite.from_idlist(SDL.Renderer render,string[] idlist ){
+			this.render = render;
+			sprite = new SDL.Texture[idlist.length];
+			nframes = (uint16) idlist.length;
 			active= true;
 			cont = 0;
 			state = 1;
-			for (int i = 0; i < pathlist.length; i++) {
-				sprite[i] = Frame(pathlist[i], render);
-				place.x = 0;
-				place.y = 0;
-				int access;
-				SDL.PixelRAWFormat format;
-				sprite[0].img.query(out format, out access, out place.w, out place.h);
+			foreach (string id in idlist) {
+				this.add_frame(ResourceManager.instance.get_image(id));
 			}
-			this.render = render;
+			
 		}
 
 		/* Method definitions */
 
-		public void add_frame (Frame frame) {
+		public void add_frame (SDL.Texture frame) {
 			if(cont < nframes){
 				sprite[cont] = frame;
 				cont++;
@@ -93,7 +86,7 @@ namespace SpaceFight{
 				int w;
 				int access;
 				SDL.PixelRAWFormat format;
-				sprite[cont].img.query(out format,out access,out w,out h);
+				sprite[cont].query(out format,out access,out w,out h);
 				if(place.w < w){
 					place.w = w;
 				}
@@ -102,18 +95,18 @@ namespace SpaceFight{
 				}
 			}
 			else {
-				sprite = new Frame[nframes];
+				sprite = new SDL.Texture[nframes];
 			}
 		}
 
-		public void add_img(string path){
+		public void add_img(string id){
 			if(cont < nframes){
-				sprite[cont] = Frame(path, this.render);
+				sprite[cont] = ResourceManager.instance.get_image(id);
 				int h;
 				int w;
 				int access;
 				SDL.PixelRAWFormat format;
-				sprite[cont].img.query(out format,out access,out w,out h);
+				sprite[cont].query(out format,out access,out w,out h);
 				if(place.w < w){
 					place.w = w;
 				}
@@ -125,13 +118,13 @@ namespace SpaceFight{
 
 			}
 			else {
-				sprite = new Frame[1];
-				sprite[0] = Frame(path, this.render);
+				sprite = new SDL.Texture[1];
+				sprite[0] = ResourceManager.instance.get_image(id);
 				int h;
 				int w;
 				int access;
 				SDL.PixelRAWFormat format;
-				sprite[cont].img.query(out format,out access,out w,out h);
+				sprite[cont].query(out format,out access,out w,out h);
 				place.w = w; 
 				place.h = h;
 				cont++;
@@ -146,11 +139,11 @@ namespace SpaceFight{
 		public int frames () {
 			return cont;
 		}
-		public void draw ( SDL.Renderer renderer = this.render, SDL.Rect? srcrect = null) {
-			renderer.copy(sprite[state].img, srcrect, place);
+		public virtual void draw ( ) {
+			render.copy(sprite[state], null, place);
 			
 		}
-		public void animate( SDL.Renderer renderer = this.render, SDL.Rect? srcrect = null){
+		public void animate(){
 			
 			if(nframes > 1){
 				if (state == nframes){
@@ -160,29 +153,17 @@ namespace SpaceFight{
 				}
 				
 			}
-			this.draw(renderer, srcrect);
+			this.draw();
 		}
 
 		public bool colision (Sprite sp) {
-			int w1, h1, w2, h2, x1, x2, y1, y2;
-
-			w1 = this.place.w;
-			h1 = this.place.h;
-			x1 = this.place.x;
-			y1 = this.place.y;
-
-			w2 = sp.place.w;
-			h2 = sp.place.h;
-			x2 = sp.place.x;
-			y2 = sp.place.y;
-
-			if(((x1 + w1) > x2) && ((y1 + h1) > y2) && ((x2 + w2) > x1) && ((y2 + h2) > y1)){
+			if(this.place.is_intersecting( sp.place)){
 				this.active = false;
 				return true;
 			} else {
 				return false;
 			}
-		}
 
+		}
 	}
 }

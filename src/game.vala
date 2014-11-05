@@ -1,7 +1,7 @@
 /* -*- Mode: vala; tab-width: 4; intend-tabs-mode: t -*- */
 /* game.c
  * game.vala
- * Copyright (C) Mario Daniel Ruiz Saavedra 2013 <desiderantes@rocketmail.com>
+ * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2014 <desiderantes@rocketmail.com>
 	 * SpaceFight is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
@@ -35,12 +35,6 @@ namespace SpaceFight{
 		private Sprite background;
 		private GLib.List<Actor> enemies;
 		private GLib.List<Shot> ship_shots;
-
-		private SDL.Surface icon;
-		private SDL.Surface image;
-		private SDL.Rect dest;
-		private SDL.Event event;
-		private SDL.Key keys;
 		public uint8 level;
 
 		private uint8 dead;
@@ -69,40 +63,37 @@ namespace SpaceFight{
 				if (ey > SCREEN_HEIGHT - (SCREEN_HEIGHT / 12)){
 					ey = SCREEN_HEIGHT / 12;
 				}
-				Actor en = new Actor ("img/enemies.bmp", false, ex, ey);
+				Actor en = new Actor (this.render,"img/enemies.bmp", false, ex, ey);
 
 
-				if (en.actual_frame.img == null){
+				if (en.actual_frame == null){
 					GLib.error("Error loading image: %s \n", SDL.get_error());
-					SDL.quit();
 				}
 
-				en.actual_frame.img.set_color_mod(90,53,53);
+				en.actual_frame.set_color_mod(90,53,53);
 				enemies.append(en);
 				ex += SCREEN_WIDTH /14;
 			}
-			background= new Sprite ("img/background1.bmp");
-			if(background.actual_frame.img == null){
+			background= new Background (this.render,"img/background1.bmp");
+			if(background.actual_frame == null){
 				GLib.error("Error loading image: %s \n", SDL.get_error());
-				SDL.quit();
 			}
-			ship = new Actor ("img/minave.bmp", true, SCREEN_WIDTH /2, SCREEN_HEIGHT - (SCREEN_HEIGHT / (15/2) )  );
-			ship.actual_frame.img.set_color_mod(21,159,40);
-			if (ship.actual_frame.img == null){
+			ship = new Actor (this.render,"img/minave.bmp", true, SCREEN_WIDTH /2, SCREEN_HEIGHT - (SCREEN_HEIGHT / (15/2) ) );
+			ship.actual_frame.set_color_mod(21,159,40);
+			if (ship.actual_frame == null){
 				GLib.error("Error loading image: %s \n", SDL.get_error());
-				SDL.quit();
 			}
 
 		}
 		public void run (){
 			while (!done){
-				background.draw(render);
-				ship.draw(render);
+				background.draw();
+				ship.draw();
 				Actor en2;
 				for (uint8 i = 0; i < limit; i++){
 					en2 = enemies.nth_data(i);
 					if(en2.active){
-						en2.draw(render);
+						en2.draw();
 						if(en2.place.x > (SCREEN_WIDTH - en2.place.w)){
 							en2.place.x = en2.place.w;
 							en2.place.y += en2.place.h;
@@ -114,7 +105,7 @@ namespace SpaceFight{
 				}
 				for (uint8 i = 0; i < ship_shots.length(); i++){
 					Shot tiro = ship_shots.nth_data(i);
-					tiro.draw(render);
+					tiro.draw();
 					tiro.place.x += tiro.movement * 5 ;
 					if(tiro.place.y <= 0 ){
 						ship_shots.remove(tiro);
@@ -152,7 +143,7 @@ namespace SpaceFight{
 								if(ship.place.y > 0) {
 									ship.place.y -= 5;
 									if(ship.place.y < (SCREEN_HEIGHT - ship.place.h * 3.5 )){
-										ship.place.y = (SCREEN_HEIGHT - ship.place.h * 3.5);
+										ship.place.y = (int)(SCREEN_HEIGHT - ship.place.h * 3.5);
 									}
 								}
 								break;
@@ -175,12 +166,11 @@ namespace SpaceFight{
 
 		public void end(){
 			//FIXME Not complete
-			var text = new Sprite("img/perdiste.bmp");
-			if(text.actual_frame.img== null){ // En caso de no cargarse la imagen, advertimos al usuario
+			var text = new Sprite(render,"img/perdiste.bmp",0,0 );
+			if(text.actual_frame== null){ // En caso de no cargarse la imagen, advertimos al usuario
 				GLib.error("No se ha podido cargar la imagen: %s\n", SDL.get_error());
-				SDL.quit();
 			}
-			text.draw(render);
+			text.draw();
 			render.present();
 			for (SDL.Event e = {0}; e.type != SDL.EventType.QUIT || e.type != SDL.EventType.KEYDOWN; Event.poll (out e)){
 				render.present();

@@ -1,6 +1,6 @@
 /* -*- Mode: vala; tab-width: 4; intend-tabs-mode: t -*- */
-/* actor.c
- * actor.vala
+/* background.c
+ * background.vala
  * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2014 <desiderantes@rocketmail.com>
  * SpaceFight is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -20,22 +20,29 @@ using SDL;
 using GLib;
 using SDLImage;
 namespace SpaceFight{
+
+	public class Background : Sprite{
 	
-	public class Actor : Sprite{
-		private uint16 shot_counter;
-		public bool type;
-		public Actor (SDL.Renderer render,string path, bool type, int x, int y){
-			base(render,path, x, y);
-			this.type = type;
-			this.shot_counter = 0;
+		public Background(SDL.Renderer render, string tilepath){
+			base(render, tilepath,0,0);
 		}
 
-		public virtual bool shoot( List<Shot> shot_list){
-			var shot = new Shot(this.render, (uint16)(this.place.x + (this.place.w / 2)), (uint16)this.place.y , type);
-			shot_counter++;
-			shot_list.append(shot);
-			return true;
+		public override void draw(){
+			//TODO: Moving the background
+			var tile_rect = this.place;
+			int w;
+			int h;
+			render.get_logical_size(out w, out h);
+			do{
+				render.copy(actual_frame, null, tile_rect);
+				if(tile_rect.x > w){
+					tile_rect.x = 0;
+					tile_rect.y += tile_rect.h;
+				} else{
+					tile_rect.x += tile_rect.w;
+				}
+				
+			}while(tile_rect.y < h);
 		}
 	}
-	
 }
