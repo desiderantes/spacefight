@@ -85,7 +85,7 @@ namespace SpaceFight{
 
 		}
 		private void load_sounds(){
-			var path = GLib.Path.build_filename (Config.SOUND_DIR, "font_list.cfg");
+			var path = GLib.Path.build_filename (Config.SOUND_DIR, "sound_list.cfg");
 			var file = FileStream.open(path, "r");
 			string line = "";
 			do{
