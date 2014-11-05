@@ -43,14 +43,15 @@ namespace SpaceFight{
 		public static int main (string[] args){
 			SDL.init(InitFlag.EVERYTHING);
 			SDLImage.init(SDLImage.InitFlags.ALL);
+			SDLTTF.init();
 			var app = new SpaceFight();
 			app.run();
-			SDLImage.quit ();
-			SDL.quit ();
-
+			SDLImage.quit();
+			SDL.quit();
+			SDLTTF.quit();
 			return 0;
 		}
-		private void run(){
+		protected override void activate() {
 			window.show ();
 			menu();
 		}
@@ -61,8 +62,8 @@ namespace SpaceFight{
 			var splash = new Sprite(render,"img/splash.bmp", 0,0);
 			var seleccion = new Sprite(render,"img/selector.bmp",0,0);
 			Sprite botones[5];
-			if(splash.actual_frame== null){ // En caso de no cargarse la imagen, advertimos al usuario
-				GLib.error("No se ha podido cargar la imagen: %s\n", SDL.get_error());
+			if(splash.actual_frame== null){ 
+				GLib.error("Unable to load resource: %s\n", SDL.get_error());
 			}
 
 			splash.draw();
@@ -72,7 +73,7 @@ namespace SpaceFight{
 				botones[i].place.y=ey;
 				ey+= SCREEN_WIDTH/12;
 				if(botones[i].actual_frame == null){// En caso de no cargarse alguna imagen, con malévolos motivos de depuración
-					GLib.error("No se ha podido cargar la imagen para el boton %d: %s\n", i, SDL.get_error());
+					GLib.error("Unable to load button resource %d: %s\n", i, SDL.get_error());
 				}
 				botones[i].actual_frame.set_color_mod(255, 255, 255);
 				botones[i].draw();
@@ -174,7 +175,7 @@ namespace SpaceFight{
 		private void instruccion(){
 			bool check = true;
 			var text = new Sprite(render,"img/instrucciones.bmp",0,0);
-			if(text.actual_frame== null){ // En caso de no cargarse la imagen, advertimos al usuario
+			if(text.actual_frame== null){ 
 				GLib.error("Unable to load image: %s\n", SDL.get_error());
 			}
 			text.draw();

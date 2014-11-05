@@ -157,7 +157,7 @@ namespace SpaceFight{
 		}
 
 		public bool colision (Sprite sp) {
-			if(this.place.is_intersecting( sp.place)){
+			if(this.place.is_intersecting(sp.place)){
 				this.active = false;
 				return true;
 			} else {

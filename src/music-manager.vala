@@ -44,7 +44,7 @@ namespace SpaceFight{
 			}
 			background_music = new SDLMixer.Music("sfx/background.ogg");
 			channels = SDLMixer.Channel.allocate(2);
-			background_music.volume(100);
+			Music.volume(100);
 			background_music.play(-1);
 		}
 
@@ -55,19 +55,19 @@ namespace SpaceFight{
 		}
 
 		public void toggle_background(){
-			if(background_music.is_paused()){
-				background_music.resume();
+			if(Music.is_paused()){
+				Music.resume();
 			}else{
-				background_music.pause();
+				Music.pause();
 			}
 		}
 
 		public void toggle_background_fading(uint8 ms){
 			//TODO: actual fading of background music
-			if(background_music.is_paused()){
-				background_music.resume();
+			if(Music.is_paused()){
+				Music.resume();
 			}else{
-				background_music.pause();
+				Music.pause();
 			}
 		}		
 	}
