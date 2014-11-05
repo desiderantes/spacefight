@@ -38,10 +38,10 @@ AM_CONDITIONAL(NATIVE_WIN32, test x"$native_win32" = "xyes")
 LT_INIT([win32-dll])
 
 dnl Check for vala
-AM_PROG_VALAC([0.10.0])
+AM_PROG_VALAC([0.26.0])
 
 
-PKG_CHECK_MODULES(SPACEFIGHT, [gtk+-3.0 SDL2_image SDL2_mixer sdl2])
+PKG_CHECK_MODULES(SPACEFIGHT,[gtk+-3.0 SDL2_image SDL2_mixer sdl2 SDL2_ttf])
 
 
 AC_OUTPUT([
