@@ -21,21 +21,10 @@ using GLib;
 using SDLImage;
 namespace SpaceFight{
 	
-	public class Actor : Sprite{
-		private uint16 shot_counter;
-		public bool type;
-		public Actor (SDL.Renderer render,string path, bool type, int x, int y){
-			base(render,path, x, y);
-			this.type = type;
-			this.shot_counter = 0;
-		}
+	public interface Actor : Sprite{
+	
 
-		public virtual bool shoot( List<Shot> shot_list){
-			var shot = new Shot(this.render, (uint16)(this.place.x + (this.place.w / 2)), (uint16)this.place.y , type);
-			shot_counter++;
-			shot_list.append(shot);
-			return true;
-		}
+		public abstract bool shoot( List<Shot> shot_list);
 	}
 	
 }

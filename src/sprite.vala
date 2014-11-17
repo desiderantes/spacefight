@@ -50,7 +50,7 @@ namespace SpaceFight{
 			place.h = h;
 			this.render = render;
 		}
-		public Sprite.from_empty (SDL.Renderer render,uint16 nc = 1){
+		public Sprite.from_empty (SDL.Renderer render,uint16 nc = 1, int x = 0, int y =0){
 			sprite = new SDL.Texture[nc];
 			nframes = nc;
 			cont = 0;
@@ -59,10 +59,10 @@ namespace SpaceFight{
 			this.render = render;
 			place.w = 0;
 			place.h = 0;
-			place.x = 0;
-			place.y = 0;
+			place.x = x;
+			place.y =y;
 		}
-		public Sprite.from_idlist(SDL.Renderer render,string[] idlist ){
+		public Sprite.from_idlist(SDL.Renderer render,string[] idlist, int x =0, int y =0 ){
 			this.render = render;
 			sprite = new SDL.Texture[idlist.length];
 			nframes = (uint16) idlist.length;

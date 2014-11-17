@@ -72,16 +72,16 @@ namespace SpaceFight{
 		private void load_images(){
 			var path = GLib.Path.build_filename (Config.IMAGE_DIR, "image_list.cfg");
 			var file = FileStream.open(path, "r");
-			string line="";
-			do{
-				line = file.read_line();
+			string line=file.read_line();
+			while (line != null);{
 				string[] parsed_line = line.split("|", 2);
 				string first = parsed_line[0];
 				string second = parsed_line[1];
 				first = first.strip();
 				second = second.strip();
 				image_resources.insert(first, SDLImage.load_texture(render,second));
-			}while (line != null);
+				line = file.read_line();
+			}
 
 		}
 		private void load_sounds(){

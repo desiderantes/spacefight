@@ -31,9 +31,9 @@ namespace SpaceFight{
 
 		private unowned SDL.Renderer render;
 		private bool done;
-		private Actor ship;
-		private Sprite background;
-		private GLib.List<Actor> enemies;
+		private Player ship;
+		private Background background;
+		private GLib.List<Enemy> enemies;
 		private GLib.List<Shot> ship_shots;
 		public uint8 level;
 
@@ -54,7 +54,7 @@ namespace SpaceFight{
 		}
 
 		public void load_sprites(uint16 ex, uint16 ey){
-			enemies = new GLib.List <Actor> ();
+			enemies = new GLib.List<Enemy> ();
 			for (uint8 i = 0; i < limit; i++){
 				if (ex > SCREEN_WIDTH - (SCREEN_WIDTH / 40)){
 					ex = SCREEN_WIDTH / 40;
@@ -63,7 +63,7 @@ namespace SpaceFight{
 				if (ey > SCREEN_HEIGHT - (SCREEN_HEIGHT / 12)){
 					ey = SCREEN_HEIGHT / 12;
 				}
-				Actor en = new Actor (this.render,"img/enemies.bmp", false, ex, ey);
+				Enemy en = new Enemy (this.render, ex, ey);
 
 
 				if (en.actual_frame == null){
@@ -78,7 +78,7 @@ namespace SpaceFight{
 			if(background.actual_frame == null){
 				GLib.error("Error loading image: %s \n", SDL.get_error());
 			}
-			ship = new Actor (this.render,"img/minave.bmp", true, SCREEN_WIDTH /2, SCREEN_HEIGHT - (SCREEN_HEIGHT / (15/2) ) );
+			ship = new Player (this.render, SCREEN_WIDTH /2, SCREEN_HEIGHT - (SCREEN_HEIGHT / (15/2) ) );
 			ship.actual_frame.set_color_mod(21,159,40);
 			if (ship.actual_frame == null){
 				GLib.error("Error loading image: %s \n", SDL.get_error());
@@ -89,7 +89,7 @@ namespace SpaceFight{
 			while (!done){
 				background.draw();
 				ship.draw();
-				Actor en2;
+				Enemy en2;
 				for (uint8 i = 0; i < limit; i++){
 					en2 = enemies.nth_data(i);
 					if(en2.active){
