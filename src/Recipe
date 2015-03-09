@@ -4,9 +4,9 @@ templates.spacefight{
             
     variables = @DATADIR@=$(options.data-directory) \
                 @PACKAGE_DATA_DIR@=$(options.project-data-directory) \
-                @IMAGE_DIR@ = \
-                @SOUND_DIR@ = \
-                @FONT_DIR@ = \
+                @IMAGE_DIR@=$(options.data-directory)/data/gfx \
+                @SOUND_DIR@=$(options.data-directory)/data/sfx \
+                @FONT_DIR@=$(options.data-directory)/data/fonts \
                 @GETTEXT_PACKAGE@=spacefight \
                 @RELEASE_NAME@=spacefight \
                 @VERSION@=$(project.version) \
