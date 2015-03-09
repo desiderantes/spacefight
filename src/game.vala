@@ -1,12 +1,12 @@
 /* -*- Mode: vala; tab-width: 4; intend-tabs-mode: t -*- */
 /* game.c
  * game.vala
- * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2014 <desiderantes@rocketmail.com>
-	 * SpaceFight is free software: you can redistribute it and/or modify it
+ * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2015 <desiderantes@rocketmail.com>
+ * SpaceFight is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
-	 * 
+ * 
  * SpaceFight is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -89,21 +89,12 @@ namespace SpaceFight{
 			while (!done){
 				background.draw();
 				ship.draw();
-				Enemy en2;
-				for (uint8 i = 0; i < limit; i++){
-					en2 = enemies.nth_data(i);
-					if(en2.active){
-						en2.draw();
-						if(en2.place.x > (SCREEN_WIDTH - en2.place.w)){
-							en2.place.x = en2.place.w;
-							en2.place.y += en2.place.h;
-						}else {en2.place.x +=5 ;}
-						if(en2.place.y> (SCREEN_HEIGHT - en2.place.h * 3.5 )){
-							this.end();
-						}
-					}
+				foreach(Enemy en in enemies){
+					en.draw();
 				}
-				for (uint8 i = 0; i < ship_shots.length(); i++){
+				
+			
+				for(uint8 i = 0; i < ship_shots.length(); i++){
 					Shot tiro = ship_shots.nth_data(i);
 					tiro.draw();
 					tiro.place.x += tiro.movement * 5 ;

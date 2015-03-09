@@ -1,0 +1,47 @@
+templates.spacefight{
+
+    files = config.vala \
+            
+    variables = @DATADIR@=$(options.data-directory) \
+                @PACKAGE_DATA_DIR@=$(options.project-data-directory) \
+                @IMAGE_DIR@ = \
+                @SOUND_DIR@ = \
+                @FONT_DIR@ = \
+                @GETTEXT_PACKAGE@=spacefight \
+                @RELEASE_NAME@=spacefight \
+                @VERSION@=$(project.version) \
+                @EXEC_NAME@=spacefight \
+                @COPYRIGHT_YEARS@=2015 \
+                @MAIN_URL@=https://launchpad.net/spacefight \
+                @BUG_URL@=https://bugs.launchpad.net/spacefight \
+                @HELP_URL@=https://answers.launchpad.net/spacefight \
+                @TRANSLATE_URL@=https://translations.launchpad.net/spacefight \ 
+
+}
+programs.spacefight {
+
+	sources =	spacefight.vala \
+				config.vala \ 
+				actor.vala \
+				game.vala \
+				shot.vala \
+				sprite.vala \
+				background.vala \
+				music-manager.vala \
+				resource-manager.vala \
+				player.vala \
+				enemy.vala \
+
+
+	vala-packages = sdl2-image \
+					sdl2-mixer \
+					sdl2 \
+					sdl2-ttf \
+	
+	gettext-domain = spacefight
+
+	compile-flags = -DGETTEXT_PACKAGE=\"spacefight\" -lSDL2_image -lSDL2_mixer -lSDL2_ttf
+
+	vala-compile-flags = --pkg sdl2-image --pkg sdl2-mixer --pkg sdl2 --pkg sdl2-ttf --target-glib=2.38 --thread --enable-checking --debug --enable-experimental --verbose --fatal-warnings
+	
+}

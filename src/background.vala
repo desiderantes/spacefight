@@ -1,7 +1,7 @@
 /* -*- Mode: vala; tab-width: 4; intend-tabs-mode: t -*- */
 /* background.c
  * background.vala
- * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2014 <desiderantes@rocketmail.com>
+ * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2015 <desiderantes@rocketmail.com>
  * SpaceFight is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
@@ -30,16 +30,16 @@ namespace SpaceFight{
 		public override void draw(){
 			//TODO: Moving the background
 			var tile_rect = this.place;
-			int w;
-			int h;
+			uint w;
+			uint h;
 			render.get_logical_size(out w, out h);
 			do{
 				render.copy(actual_frame, null, tile_rect);
 				if(tile_rect.x > w){
 					tile_rect.x = 0;
-					tile_rect.y += tile_rect.h;
+					tile_rect.y += ((int)tile_rect.h);
 				} else{
-					tile_rect.x += tile_rect.w;
+					tile_rect.x += ((int)tile_rect.w);
 				}
 				
 			}while(tile_rect.y < h);

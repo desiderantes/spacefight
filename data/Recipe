@@ -1,0 +1,4 @@
+data.desktop {
+    xdg-desktop-files = spacefight.desktop
+    gettext-domain = spacefight
+}

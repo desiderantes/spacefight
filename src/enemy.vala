@@ -1,7 +1,7 @@
 /* -*- Mode: vala; tab-width: 4; intend-tabs-mode: t -*- */
 /* enemy.c
  * enemy.vala
- * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2014 <desiderantes@rocketmail.com>
+ * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2015 <desiderantes@rocketmail.com>
  * SpaceFight is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
@@ -28,7 +28,18 @@ namespace SpaceFight{
 		public bool shoot( List<Shot> shot_list){
 			return false;
 		}
-		
+		public override void draw(){
+			render.copy(actual_frame, null, place);
+			int w;
+			int h;
+			render.get_logical_size(out w, out h);
+			if(this.place.x > (w - this.place.w)){
+				this.place.x = (int)this.place.w;
+				this.place.y += (int)this.place.h;
+			}else{
+				this.place.x +=5 ;
+			}
+		}	
 	}
 	
 	

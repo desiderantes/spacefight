@@ -1,7 +1,7 @@
 /* -*- Mode: vala; tab-width: 4; intend-tabs-mode: t -*- */
 /* music-manager.c
  * music-manager.vala
- * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2014 <desiderantes@rocketmail.com>
+ * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2015 <desiderantes@rocketmail.com>
  * SpaceFight is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
@@ -39,7 +39,7 @@ namespace SpaceFight{
 		}
 
 		private MusicManager(){
-			if(SDLMixer.open(44100,SDL.AudioFormat.S16LSB,2,4096) != 0){
+			if(SDLMixer.open(44100,SDL.Audio.Format.S16LSB,2,4096) != 0){
 				GLib.error("Error loading audio: %s \n", SDL.get_error());
 			}
 			background_music = new SDLMixer.Music("sfx/background.ogg");

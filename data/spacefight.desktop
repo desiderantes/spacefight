@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=SpaceFight
+Comment=Space shooter game
+Exec=spacefight
+Icon=application-default-icon
+Terminal=false
+Categories=Game;
+X-GNOME-Gettext-Domain=spacefight
+Name[es]=SpaceFight
+GenericName=SDL2 Shooter game
+
