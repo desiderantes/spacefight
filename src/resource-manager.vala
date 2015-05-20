@@ -26,7 +26,7 @@ namespace SpaceFight{
 	public class ResourceManager{
 
 		private static ResourceManager hidden_inst;
-		private HashTable<string, SDL.Texture> image_resources;
+		private HashTable<string, SDL.Texture?> image_resources;
 		private HashTable<string, SDLMixer.Chunk> sound_resources;
 		private HashTable<string, SDLTTF.Font> font_resources;
 		private unowned SDL.Renderer render;
@@ -42,7 +42,7 @@ namespace SpaceFight{
 			}
 		}
 		private ResourceManager(){
-			image_resources = new HashTable<string, SDL.Texture>(null, null);
+			image_resources = new HashTable<string, SDL.Texture?>(null, null);
 			sound_resources = new HashTable<string, SDLMixer.Chunk>(null, null);
 			font_resources = new HashTable<string, SDLTTF.Font>(null, null);
 		}

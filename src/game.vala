@@ -159,7 +159,7 @@ namespace SpaceFight{
 			//FIXME Not complete
 			var text = new Sprite(render,"img/perdiste.bmp",0,0 );
 			if(text.actual_frame== null){ // En caso de no cargarse la imagen, advertimos al usuario
-				GLib.error("No se ha podido cargar la imagen: %s\n", SDL.get_error());
+				GLib.error("Unable to load end background: %s\n", SDL.get_error());
 			}
 			text.draw();
 			render.present();

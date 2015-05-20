@@ -24,7 +24,24 @@ namespace SpaceFight{
 		DUO,
 		ULTRASHOT,
 		SHIELD,
-		NONE
+		NONE;
+		
+		public string to_string(){
+			switch (this){
+				case FASTER:
+					return _("Speed Bump");
+				case DUO:
+					return _("Double Ship");
+				case ULTRASHOT:
+					return _("Wide Shot");
+				case SHIELD:
+					return _("Shield");
+				case NONE:
+					return _("None");
+				default:
+					GLib.assert_not_reached();
+			}
+		}
 	}
 	public class Player : Sprite, Actor {
 		private uint8 damage;

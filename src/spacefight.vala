@@ -47,8 +47,8 @@ namespace SpaceFight{
 			var app = new SpaceFight();
 			app.run();
 			SDLImage.quit();
-			SDL.quit();
 			SDLTTF.quit();
+			SDL.quit();
 			return 0;
 		}
 		protected override void activate() {
@@ -59,8 +59,8 @@ namespace SpaceFight{
 			uint16 ex=SCREEN_WIDTH / 40;
 			uint16 ey =(SCREEN_HEIGHT/10) * 6 ;
 			bool good = true;
-			var splash = new Sprite(render,"img/splash.bmp", 0,0);
-			var seleccion = new Sprite(render,"img/selector.bmp",0,0);
+			var splash = new Sprite(render,"splash", 0,0);
+			var seleccion = new Sprite(render,"selector",0,0);
 			Sprite botones[5];
 			if(splash.actual_frame== null){ 
 				GLib.error("Unable to load resource: %s\n", SDL.get_error());
@@ -161,29 +161,26 @@ namespace SpaceFight{
 				GLib.error("Failed to start: Are you sure there is a SDL2 lib on your system?");
 			}
 			SDLImage.init(SDLImage.InitFlags.ALL);
-			render = SDL.Renderer.get_from_window(window); 
+			render = Renderer.create(window, 0, SDL.RendererFlags.ACCELERATED); 
 			icon = new SDL.Surface.from_bmp ("img/icono.bmp");
 			window.set_icon(icon);
-			SDL.GL.set_attribute(SDL.GLattr.DOUBLEBUFFER, 1);
+			SDL.GL.set_attribute(SDL.GL.Attributes.DOUBLEBUFFER, 1);
 		}
 
 		public void init_music(){
 			music = MusicManager.instance;
-			
 		}
 
 		private void instruccion(){
-			bool check = true;
-			var text = new Sprite(render,"img/instrucciones.bmp",0,0);
+			var text = new Sprite(render,"instructions",0,0);
 			if(text.actual_frame== null){ 
 				GLib.error("Unable to load image: %s\n", SDL.get_error());
 			}
 			text.draw();
 			render.present();
-			window.update_surface ();
 			for (SDL.Event e = {0}; e.type != SDL.EventType.QUIT; Event.poll (out e)){
 				render.present ();
-				window.update_surface ();
+
 			}
 		}
 	}
