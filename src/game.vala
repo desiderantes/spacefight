@@ -29,7 +29,7 @@ namespace SpaceFight{
 		private uint16 ex=SCREEN_WIDTH / 40;
 		private uint16 ey= SCREEN_HEIGHT / 12;
 
-		private unowned SDL.Renderer render;
+		private unowned SDL.Graphics.Renderer render;
 		private bool done;
 		private Player ship;
 		private Background background;
@@ -41,7 +41,7 @@ namespace SpaceFight{
 		private uint8 limit;
 		private uint8 shots_left;
 
-		public Game (uint8 level, SDL.Renderer render, uint16 SCREEN_WIDTH, uint16 SCREEN_HEIGHT){
+		public Game (uint8 level, Graphics.Renderer render, uint16 SCREEN_WIDTH, uint16 SCREEN_HEIGHT){
 			uint16 ex = SCREEN_WIDTH / 50;
 			uint16 ey = SCREEN_HEIGHT / (40 / 3); 
 			limit = (level*level*20)-(level/2)+(level*level);
@@ -115,22 +115,22 @@ namespace SpaceFight{
 				switch (event.type) {
 					case EventType.KEYDOWN:
 						switch ( event.key.keysym.sym ){
-							case SDL.Keycode.ESCAPE:
+							case Input.Keycode.ESCAPE:
 								// ESC key was pressed
 								done = true;
 								this.end();
 								break;
-							case SDL.Keycode.LEFT:
+							case Input.Keycode.LEFT:
 								if(ship.place.x > 0) {
 									ship.place.x -=3;
 								}
 								break;
-							case SDL.Keycode.RIGHT:
+							case Input.Keycode.RIGHT:
 								if(ship.place.x  + ship.place.w < SCREEN_WIDTH) {
 									ship.place.x +=3;
 								}
 								break;
-							case SDL.Keycode.UP:
+							case Input.Keycode.UP:
 								if(ship.place.y > 0) {
 									ship.place.y -= 5;
 									if(ship.place.y < (SCREEN_HEIGHT - ship.place.h * 3.5 )){
@@ -138,12 +138,12 @@ namespace SpaceFight{
 									}
 								}
 								break;
-							case SDL.Keycode.DOWN:
+							case Input.Keycode.DOWN:
 								if(ship.place.y + ship.place.h < SCREEN_HEIGHT) {
 									ship.place.y += 5;
 								}
 								break;
-							case SDL.Keycode.SPACE:
+							case Input.Keycode.SPACE:
 								ship.shoot(ship_shots);
 								break;
 

@@ -48,7 +48,7 @@ namespace SpaceFight{
 		private uint8 damage_limit;
 		private PowerUp power_up;
 		private uint16 shot_counter;
-		public Player(SDL.Renderer render, int x, int y ){
+		public Player(Graphics.Renderer render, int x, int y ){
 			this.power_up = PowerUp.NONE;
 			this.shot_counter = 0;
 			this.damage = 0;

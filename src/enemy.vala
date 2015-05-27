@@ -21,7 +21,7 @@ using SDL;
 namespace SpaceFight{
 	public class Enemy : Sprite, Actor{
 
-		public Enemy(SDL.Renderer render, int x, int y){
+		public Enemy(Graphics.Renderer render, int x, int y){
 			base.from_idlist(render,{"enemy-normal","enemy-damaged","enemy-explosion1","enemy-explosion2","enemy-super","enemy-superdamaged"},x,y);	
 		}
 

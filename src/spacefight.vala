@@ -25,9 +25,9 @@ namespace SpaceFight{
 		private Sprite  boton2;
 		private Sprite  boton3;
 		private MusicManager music;
-		private SDL.Surface icon;
-		protected static SDL.Window window;
-		private static SDL.Renderer render;
+		private Graphics.Surface icon;
+		protected static Graphics.Window window;
+		private static Graphics.Renderer render;
 		private const uint16 SCREEN_WIDTH = 800;
 		private const uint16 SCREEN_HEIGHT = 600;
 		private const uint16 SCREEN_BPP = 24;
@@ -63,7 +63,7 @@ namespace SpaceFight{
 			var seleccion = new Sprite(render,"selector",0,0);
 			Sprite botones[5];
 			if(splash.actual_frame== null){ 
-				GLib.error("Unable to load resource: %s\n", SDL.get_error());
+				GLib.error("Unable to load resource: %s\n", SDL.Error.get_error());
 			}
 
 			splash.draw();
@@ -91,11 +91,11 @@ namespace SpaceFight{
 				switch (event.type) {
 					case EventType.KEYDOWN:
 						switch ( event.key.keysym.sym ){
-						case SDL.Keycode.ESCAPE:
+						case Input.Keycode.ESCAPE:
 							// ESC key was pressed
 							return;
 							break;
-						case SDL.Keycode.UP:
+						case Input.Keycode.UP:
 							if(seleccion.get_data<uint16>(posnam) == 0){
 								break;
 							}else{
@@ -104,7 +104,7 @@ namespace SpaceFight{
 								render.present();
 							}
 							break;
-						case SDL.Keycode.DOWN:
+						case Input.Keycode.DOWN:
 							if (seleccion.get_data<uint16>(posnam) ==4){
 								break;
 							}else{
@@ -113,7 +113,7 @@ namespace SpaceFight{
 								render.present();
 							}
 							break;
-						case SDL.Keycode.RETURN:
+						case Input.Keycode.RETURN:
 							switch (seleccion.get_data<uint16>(posnam)){
 								case 0:
 									var game = new Game(1, render, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -156,13 +156,13 @@ namespace SpaceFight{
 
 		}
 		private void init_video() {	
-			window = new Window("Space Fight", SDL.Window.POS_CENTERED, SDL.Window.POS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL.InitFlag.EVERYTHING);
+			window = new Graphics.Window("Space Fight", Graphics.Window.POS_CENTERED, Graphics.Window.POS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL.InitFlag.EVERYTHING);
 			if (window == null) {
 				GLib.error("Failed to start: Are you sure there is a SDL2 lib on your system?");
 			}
 			SDLImage.init(SDLImage.InitFlags.ALL);
-			render = Renderer.create(window, 0, SDL.RendererFlags.ACCELERATED); 
-			icon = new SDL.Surface.from_bmp ("img/icono.bmp");
+			render = Graphics.Renderer.create(window, 0, SDL.RendererFlags.ACCELERATED); 
+			icon = new Graphics.Surface.from_bmp ("img/icono.bmp");
 			window.set_icon(icon);
 			SDL.GL.set_attribute(SDL.GL.Attributes.DOUBLEBUFFER, 1);
 		}

@@ -26,10 +26,10 @@ namespace SpaceFight{
 	public class ResourceManager{
 
 		private static ResourceManager hidden_inst;
-		private HashTable<string, SDL.Texture?> image_resources;
+		private HashTable<string, SDL.Graphics.Texture?> image_resources;
 		private HashTable<string, SDLMixer.Chunk> sound_resources;
 		private HashTable<string, SDLTTF.Font> font_resources;
-		private unowned SDL.Renderer render;
+		private unowned Graphics.Renderer render;
 		private uint8 point_size;
 		public static ResourceManager instance{
 			get{ 
@@ -42,12 +42,12 @@ namespace SpaceFight{
 			}
 		}
 		private ResourceManager(){
-			image_resources = new HashTable<string, SDL.Texture?>(null, null);
+			image_resources = new HashTable<string, SDL.Graphics.Texture?>(null, null);
 			sound_resources = new HashTable<string, SDLMixer.Chunk>(null, null);
 			font_resources = new HashTable<string, SDLTTF.Font>(null, null);
 		}
 
-		public void init(SDL.Renderer renderer, uint8 point_size){
+		public void init(Graphics.Renderer renderer, uint8 point_size){
 			this.render = renderer;
 			this.point_size = point_size;
 			load_fonts();
@@ -98,7 +98,7 @@ namespace SpaceFight{
 				sound_resources.insert(first, new SDLMixer.Chunk.WAV(second));
 			}while (line != null);
 		}
-		public unowned SDL.Texture? get_image(string id){
+		public unowned SDL.Graphics.Texture? get_image(string id){
 			return image_resources.get(id);
 		}	
 		public unowned SDLMixer.Chunk? get_sound(string id){

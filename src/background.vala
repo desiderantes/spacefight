@@ -23,7 +23,7 @@ namespace SpaceFight{
 
 	public class Background : Sprite{
 	
-		public Background(SDL.Renderer render, string tilepath){
+		public Background(Graphics.Renderer render, string tilepath){
 			base(render, tilepath,0,0);
 		}
 
