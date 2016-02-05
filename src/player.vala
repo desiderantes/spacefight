@@ -1,7 +1,7 @@
 /* -*- Mode: vala; tab-width: 4; intend-tabs-mode: t -*- */
 /* player.c
  * player.vala
- * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2015 <desiderantes@rocketmail.com>
+ * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2016 <desiderantes@rocketmail.com>
  * SpaceFight is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
@@ -48,7 +48,7 @@ namespace SpaceFight{
 		private uint8 damage_limit;
 		private PowerUp power_up;
 		private uint16 shot_counter;
-		public Player(Graphics.Renderer render, int x, int y ){
+		public Player(Video.Renderer render, int x, int y ){
 			this.power_up = PowerUp.NONE;
 			this.shot_counter = 0;
 			this.damage = 0;

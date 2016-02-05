@@ -1,7 +1,7 @@
 /* -*- Mode: vala; tab-width: 4; intend-tabs-mode: t -*- */
 /* game.c
  * game.vala
- * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2015 <desiderantes@rocketmail.com>
+ * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2016 <desiderantes@rocketmail.com>
  * SpaceFight is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
@@ -29,7 +29,7 @@ namespace SpaceFight{
 		private uint16 ex=SCREEN_WIDTH / 40;
 		private uint16 ey= SCREEN_HEIGHT / 12;
 
-		private unowned SDL.Graphics.Renderer render;
+		private unowned SDL.Video.Renderer render;
 		private bool done;
 		private Player ship;
 		private Background background;
@@ -41,7 +41,7 @@ namespace SpaceFight{
 		private uint8 limit;
 		private uint8 shots_left;
 
-		public Game (uint8 level, Graphics.Renderer render, uint16 SCREEN_WIDTH, uint16 SCREEN_HEIGHT){
+		public Game (uint8 level, Video.Renderer render, uint16 SCREEN_WIDTH, uint16 SCREEN_HEIGHT){
 			uint16 ex = SCREEN_WIDTH / 50;
 			uint16 ey = SCREEN_HEIGHT / (40 / 3); 
 			limit = (level*level*20)-(level/2)+(level*level);

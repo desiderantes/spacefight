@@ -1,7 +1,7 @@
 /* -*- Mode: vala; tab-width: 4; intend-tabs-mode: t -*- */
 /* sprite.c
  * sprite.vala
- * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2015 <desiderantes@rocketmail.com>
+ * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2016 <desiderantes@rocketmail.com>
  * SpaceFight is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
@@ -25,15 +25,15 @@ namespace SpaceFight{
 		private uint16 state;//The actual frame
 		private uint16 cont;
 		private uint16 nframes;//Number of frames
-		private (unowned Graphics.Texture?)[] sprite;
+		private (unowned Video.Texture?)[] sprite;
 		public bool active {get;set;}
-		public Graphics.Rect place{get;set;}
-		public Graphics.Texture? actual_frame{get{return this.sprite[state];}}
-		public unowned Graphics.Renderer render;
+		public Video.Rect place{get;set;}
+		public Video.Texture? actual_frame{get{return this.sprite[state];}}
+		public unowned Video.Renderer render;
 		public uint8 movement = 1;
 		// Constructor
-		public Sprite (Graphics.Renderer render, string id, int x = 0,int  y = 0 ) {
-			sprite = new Graphics.Texture[1];
+		public Sprite (Video.Renderer render, string id, int x = 0,int  y = 0 ) {
+			sprite = new Video.Texture[1];
 			nframes = 1;
 			sprite[0] = ResourceManager.instance.get_image(id);
 			cont = 0;
@@ -44,14 +44,14 @@ namespace SpaceFight{
 			int w;
 			int h;
 			int access;
-			Graphics.PixelRAWFormat format;
+			Video.PixelRAWFormat format;
 			sprite[0].query(out format, out access, out w, out h);
 			place.w = w;
 			place.h = h;
 			this.render = render;
 		}
-		public Sprite.from_empty (Graphics.Renderer render,uint16 nc = 1, int x = 0, int y =0){
-			sprite = new Graphics.Texture[nc];
+		public Sprite.from_empty (Video.Renderer render,uint16 nc = 1, int x = 0, int y =0){
+			sprite = new Video.Texture[nc];
 			nframes = nc;
 			cont = 0;
 			state = 1;
@@ -62,9 +62,9 @@ namespace SpaceFight{
 			place.x = x;
 			place.y =y;
 		}
-		public Sprite.from_idlist(Graphics.Renderer render,string[] idlist, int x =0, int y =0 ){
+		public Sprite.from_idlist(Video.Renderer render,string[] idlist, int x =0, int y =0 ){
 			this.render = render;
-			sprite = new Graphics.Texture[idlist.length];
+			sprite = new Video.Texture[idlist.length];
 			nframes = (uint16) idlist.length;
 			active= true;
 			cont = 0;
@@ -77,7 +77,7 @@ namespace SpaceFight{
 
 		/* Method definitions */
 
-		public void add_frame (Graphics.Texture frame) {
+		public void add_frame (Video.Texture frame) {
 			if(cont < nframes){
 				sprite[cont] = frame;
 				cont++;
@@ -85,7 +85,7 @@ namespace SpaceFight{
 				int h;
 				int w;
 				int access;
-				Graphics.PixelRAWFormat format;
+				Video.PixelRAWFormat format;
 				sprite[cont].query(out format,out access,out w,out h);
 				if(place.w < w){
 					place.w = w;
@@ -95,7 +95,7 @@ namespace SpaceFight{
 				}
 			}
 			else {
-				sprite = new Graphics.Texture[nframes];
+				sprite = new Video.Texture[nframes];
 			}
 		}
 
@@ -105,7 +105,7 @@ namespace SpaceFight{
 				int h;
 				int w;
 				int access;
-				Graphics.PixelRAWFormat format;
+				Video.PixelRAWFormat format;
 				sprite[cont].query(out format,out access,out w,out h);
 				if(place.w < w){
 					place.w = w;
@@ -123,7 +123,7 @@ namespace SpaceFight{
 				int h;
 				int w;
 				int access;
-				Graphics.PixelRAWFormat format;
+				Video.PixelRAWFormat format;
 				sprite[cont].query(out format,out access,out w,out h);
 				place.w = w; 
 				place.h = h;

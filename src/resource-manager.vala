@@ -1,7 +1,7 @@
 /* -*- Mode: vala; tab-width: 4; intend-tabs-mode: t -*- */
 /* resource-manager.c
  * resource-manager.vala
- * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2015 <desiderantes@rocketmail.com>
+ * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2016 <desiderantes@rocketmail.com>
  * SpaceFight is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
@@ -26,10 +26,10 @@ namespace SpaceFight{
 	public class ResourceManager{
 
 		private static ResourceManager hidden_inst;
-		private HashTable<string, SDL.Graphics.Texture?> image_resources;
+		private HashTable<string, SDL.Video.Texture?> image_resources;
 		private HashTable<string, SDLMixer.Chunk> sound_resources;
 		private HashTable<string, SDLTTF.Font> font_resources;
-		private unowned Graphics.Renderer render;
+		private unowned Video.Renderer render;
 		private uint8 point_size;
 		public static ResourceManager instance{
 			get{ 
@@ -42,12 +42,12 @@ namespace SpaceFight{
 			}
 		}
 		private ResourceManager(){
-			image_resources = new HashTable<string, SDL.Graphics.Texture?>(null, null);
+			image_resources = new HashTable<string, SDL.Video.Texture?>(null, null);
 			sound_resources = new HashTable<string, SDLMixer.Chunk>(null, null);
 			font_resources = new HashTable<string, SDLTTF.Font>(null, null);
 		}
 
-		public void init(Graphics.Renderer renderer, uint8 point_size){
+		public void init(Video.Renderer renderer, uint8 point_size){
 			this.render = renderer;
 			this.point_size = point_size;
 			load_fonts();
@@ -98,7 +98,7 @@ namespace SpaceFight{
 				sound_resources.insert(first, new SDLMixer.Chunk.WAV(second));
 			}while (line != null);
 		}
-		public unowned SDL.Graphics.Texture? get_image(string id){
+		public unowned SDL.Video.Texture? get_image(string id){
 			return image_resources.get(id);
 		}	
 		public unowned SDLMixer.Chunk? get_sound(string id){

@@ -1,7 +1,7 @@
 /* -*- Mode: vala; tab-width: 4; intend-tabs-mode: t -*- */
 /* enemy.c
  * enemy.vala
- * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2015 <desiderantes@rocketmail.com>
+ * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2016 <desiderantes@rocketmail.com>
  * SpaceFight is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
@@ -21,7 +21,7 @@ using SDL;
 namespace SpaceFight{
 	public class Enemy : Sprite, Actor{
 
-		public Enemy(Graphics.Renderer render, int x, int y){
+		public Enemy(Video.Renderer render, int x, int y){
 			base.from_idlist(render,{"enemy-normal","enemy-damaged","enemy-explosion1","enemy-explosion2","enemy-super","enemy-superdamaged"},x,y);	
 		}
 

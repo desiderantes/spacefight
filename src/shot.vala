@@ -1,7 +1,7 @@
 /* -*- Mode: vala; tab-width: 4; intend-tabs-mode: t -*- */
 /* shot.c
  * shot.vala
- * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2015 <desiderantes@rocketmail.com>
+ * Copyright (C) Mario Daniel Ruiz Saavedra 2013 - 2016 <desiderantes@rocketmail.com>
  * SpaceFight is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
@@ -20,7 +20,7 @@ using GLib;
 namespace SpaceFight{
 	public class Shot: Sprite{
 		private bool ultra;
-		public Shot (Graphics..Renderer render,uint16 x, uint16 y, bool move, bool ultra ){
+		public Shot (Video..Renderer render,uint16 x, uint16 y, bool move, bool ultra ){
 			if(move) {
 				movement = -1;
 			}else{ 
