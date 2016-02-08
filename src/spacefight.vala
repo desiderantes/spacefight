@@ -21,9 +21,9 @@ using SDL;
 using SDLImage;
 namespace SpaceFight{
 	public class SpaceFight : Application {
-		private Sprite  boton1;
-		private Sprite  boton2;
-		private Sprite  boton3;
+		private Sprite  button1;
+		private Sprite  button2;
+		private Sprite  button3;
 		private MusicManager music;
 		private Video.Surface icon;
 		protected static Video.Window window;
@@ -60,32 +60,32 @@ namespace SpaceFight{
 			uint16 ey =(SCREEN_HEIGHT/10) * 6 ;
 			bool good = true;
 			var splash = new Sprite(render,"splash", 0,0);
-			var seleccion = new Sprite(render,"selector",0,0);
-			Sprite botones[5];
+			var selection = new Sprite(render,"selector",0,0);
+			Sprite buttons[5];
 			if(splash.actual_frame== null){ 
 				GLib.error("Unable to load resource: %s\n", SDL.Error.get_error());
 			}
 
 			splash.draw();
 			for (int i = 0; i < 5; i++){
-				botones[i] = new Sprite(render,"img/boton"+(i+1).to_string()+".bmp",0,0);
-				botones[i].place.x=SCREEN_WIDTH/2;
-				botones[i].place.y=ey;
+				buttons[i] = new Sprite(render,"img/button"+(i+1).to_string()+".bmp",0,0);
+				buttons[i].place.x=SCREEN_WIDTH/2;
+				buttons[i].place.y=ey;
 				ey+= SCREEN_WIDTH/12;
-				if(botones[i].actual_frame == null){// En caso de no cargarse alguna imagen, con malévolos motivos de depuración
+				if(buttons[i].actual_frame == null){// En caso de no cargarse alguna imagen, con malévolos motivos de depuración
 					GLib.error("Unable to load button resource %d: %s\n", i, SDL.get_error());
 				}
-				botones[i].actual_frame.set_color_mod(255, 255, 255);
-				botones[i].draw();
+				buttons[i].actual_frame.set_color_mod(255, 255, 255);
+				buttons[i].draw();
 			}
-			seleccion.place.x= botones[0].place.x;
-			seleccion.place.y= botones[0].place.y;
-			seleccion.place.h= botones[0].place.h;
-			seleccion.place.w= botones[0].place.w;
-			seleccion.actual_frame.set_alpha_mod(150);
-			seleccion.draw();
+			selection.place.x= buttons[0].place.x;
+			selection.place.y= buttons[0].place.y;
+			selection.place.h= buttons[0].place.h;
+			selection.place.w= buttons[0].place.w;
+			selection.actual_frame.set_alpha_mod(150);
+			selection.draw();
 			const string posnam = "position";
-			seleccion.set_data<uint16>(posnam, 0);
+			selection.set_data<uint16>(posnam, 0);
 			for (SDL.Event event = {0}; event.type != SDL.EventType.QUIT; Event.poll (out event)){
 				render.present();
 				switch (event.type) {
@@ -96,25 +96,25 @@ namespace SpaceFight{
 							return;
 							break;
 						case Input.Keycode.UP:
-							if(seleccion.get_data<uint16>(posnam) == 0){
+							if(selection.get_data<uint16>(posnam) == 0){
 								break;
 							}else{
-								seleccion.set_data<uint16>(posnam,seleccion.get_data<uint16>(posnam) -1);
-								seleccion.place.y -=40;
+								selection.set_data<uint16>(posnam,selection.get_data<uint16>(posnam) -1);
+								selection.place.y -=40;
 								render.present();
 							}
 							break;
 						case Input.Keycode.DOWN:
-							if (seleccion.get_data<uint16>(posnam) ==4){
+							if (selection.get_data<uint16>(posnam) ==4){
 								break;
 							}else{
-								seleccion.set_data<uint16>(posnam,seleccion.get_data<uint16>(posnam) +1);
-								seleccion.place.y +=40;
+								selection.set_data<uint16>(posnam,selection.get_data<uint16>(posnam) +1);
+								selection.place.y +=40;
 								render.present();
 							}
 							break;
 						case Input.Keycode.RETURN:
-							switch (seleccion.get_data<uint16>(posnam)){
+							switch (selection.get_data<uint16>(posnam)){
 								case 0:
 									var game = new Game(1, render, SCREEN_WIDTH, SCREEN_HEIGHT);
 									game.run();
@@ -134,7 +134,7 @@ namespace SpaceFight{
 									render.present();
 									break;
 								case 3:
-									instruccion();
+									instructions();
 									splash.draw();
 									render.present();
 									break;
@@ -171,7 +171,7 @@ namespace SpaceFight{
 			music = MusicManager.instance;
 		}
 
-		private void instruccion(){
+		private void instructions(){
 			var text = new Sprite(render,"instructions",0,0);
 			if(text.actual_frame== null){ 
 				GLib.error("Unable to load image: %s\n", SDL.get_error());

@@ -20,7 +20,7 @@ using GLib;
 namespace SpaceFight{
 	public class Shot: Sprite{
 		private bool ultra;
-		public Shot (Video..Renderer render,uint16 x, uint16 y, bool move, bool ultra ){
+		public Shot (Video.Renderer render,uint16 x, uint16 y, bool move, bool ultra ){
 			if(move) {
 				movement = -1;
 			}else{ 

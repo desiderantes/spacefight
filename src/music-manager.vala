@@ -29,9 +29,11 @@ namespace SpaceFight{
 		private SDLMixer.Channel channels;
 		public static MusicManager instance{
 			get{ 
-				lock(hidden_inst){
-					if(hidden_inst == null){
-						hidden_inst = new MusicManager();
+				if (hidden_inst == null){
+					lock(hidden_inst){
+						if(hidden_inst == null){
+							hidden_inst = new MusicManager();
+						}
 					}
 				}
 				return hidden_inst;
@@ -42,7 +44,7 @@ namespace SpaceFight{
 			if(SDLMixer.open(44100,SDL.Audio.Format.S16LSB,2,4096) != 0){
 				GLib.error("Error loading audio: %s \n", SDL.get_error());
 			}
-			background_music = new SDLMixer.Music("sfx/background.ogg");
+			background_music = ResourceManager.instance.get_sound("background");
 			channels = SDLMixer.Channel.allocate(2);
 			Music.volume(100);
 			background_music.play(-1);
@@ -63,11 +65,10 @@ namespace SpaceFight{
 		}
 
 		public void toggle_background_fading(uint8 ms){
-			//TODO: actual fading of background music
 			if(Music.is_paused()){
-				Music.resume();
+				Music.fade_in(ms);
 			}else{
-				Music.pause();
+				Music.fade_out(ms);
 			}
 		}		
 	}
